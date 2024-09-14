@@ -1,0 +1,143 @@
+{
+  "name": "json-i18n-key",
+  "displayName": "Json I18n Key",
+  "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
+  "author": "Hamada Sayed",
+  "publisher": "hsayed",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "icon": "assets/icon/icon.png",
+  "activationEvents": [ "onStartupFinished" ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [ {
+        "command": "json-i18n-key.findKey",
+        "title": "Find Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.addKey",
+        "title": "Add Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.checkExistKey",
+        "title": "Check Exist Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.renameKey",
+        "title": "Rename Translation Key",
+        "category": "Json I18n Key"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Json I18n Key",
+      "properties": {
+        "json-i18n-key.translationFiles": {
+          "scope": "resource",
+          "type": "array",
+          "description": "Define the paths to translation files for multiple languages.",
+          "default": [
+            { "lang": "en", "filePath": "", "isDefault": true },
+            { "lang": "ar", "filePath": "", "isDefault": false }
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "lang": {
+                "type": "string",
+                "description": "Language code, e.g., 'en', 'ar', 'fr'."
+              },
+              "filePath": {
+                "type": "string",
+                "description": "Path to the translation file for the specified language."
+              },
+              "isDefault": {
+                "type": "boolean",
+                "description": "Whether this is the default translation file."
+              }
+            },
+            "required": [ "lang", "filePath", "isDefault" ]
+          }
+        },
+        "json-i18n-key.typeOfGetKey": {
+          "type": "string",
+          "description": "Type of getting the translation key.",
+          "default": "Selection",
+          "enum": [ "Selection", "Clipboard", "Manual" ],
+          "enumDescriptions": [
+            "Get the translation key from the selected text.",
+            "Get the translation key from the clipboard.",
+            "Manually enter the translation key."
+          ]
+        },
+        "json-i18n-key.enableCopilotTranslation": {
+          "type": "boolean",
+          "description": "Enable Copilot AI Translation.",
+          "default": true
+        }
+      }
+    },
+    "scripts": {
+      "lint": "eslint .",
+      "pretest": "npm run lint",
+      "test": "vscode-test"
+    },
+    "devDependencies": {
+      "@types/vscode": "^1.93.0",
+      "@types/mocha": "^10.0.7",
+      "@types/node": "20.x",
+      "eslint": "^9.9.1",
+      "@vscode/test-cli": "^0.0.10",
+      "@vscode/test-electron": "^2.4.1"
+    },
+    "keybindings": [
+      {
+        "command": "json-i18n-key.findKey",
+        "key": "ctrl+shift+k",
+        "mac": "cmd+shift+k",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "json-i18n-key.addKey",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "json-i18n-key.checkExistKey",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "json-i18n-key.renameKey",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/hsayed/json-i18n-key/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hsayed/json-i18n-key.git"
+  },
+  "keywords": [
+    "json",
+    "i18n",
+    "key",
+    "translation",
+    "internationalization",
+    "localization"
+  ]
+}
