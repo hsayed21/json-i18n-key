@@ -4,7 +4,7 @@
   "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
   "author": "Hamada Sayed",
   "publisher": "hsayed",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -12,10 +12,13 @@
     "Programming Languages"
   ],
   "icon": "assets/icon/icon.png",
-  "activationEvents": [ "onStartupFinished" ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./extension.js",
   "contributes": {
-    "commands": [ {
+    "commands": [
+      {
         "command": "json-i18n-key.findKey",
         "title": "Find Translation Key",
         "category": "Json I18n Key"
@@ -45,8 +48,16 @@
           "type": "array",
           "description": "Define the paths to translation files for multiple languages.",
           "default": [
-            { "lang": "en", "filePath": "", "isDefault": true },
-            { "lang": "ar", "filePath": "", "isDefault": false }
+            {
+              "lang": "en",
+              "filePath": "",
+              "isDefault": true
+            },
+            {
+              "lang": "ar",
+              "filePath": "",
+              "isDefault": false
+            }
           ],
           "items": {
             "type": "object",
@@ -64,14 +75,22 @@
                 "description": "Whether this is the default translation file."
               }
             },
-            "required": [ "lang", "filePath", "isDefault" ]
+            "required": [
+              "lang",
+              "filePath",
+              "isDefault"
+            ]
           }
         },
         "json-i18n-key.typeOfGetKey": {
           "type": "string",
           "description": "Type of getting the translation key.",
           "default": "Selection",
-          "enum": [ "Selection", "Clipboard", "Manual" ],
+          "enum": [
+            "Selection",
+            "Clipboard",
+            "Manual"
+          ],
           "enumDescriptions": [
             "Get the translation key from the selected text.",
             "Get the translation key from the clipboard.",
