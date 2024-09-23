@@ -3,7 +3,7 @@
   "displayName": "Json I18n Key",
   "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
   "author": "Hamada Sayed",
-  "publisher": "hsayed",
+  "publisher": "hsayed21",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.93.0"
