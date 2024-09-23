@@ -58,9 +58,32 @@
   ![auto-suggestion](assets/gif/auto-suggestion.gif)
 
 
+## Future TODO
+
+- [ ] Cache keys and refresh caching when files change.
+- [ ] Support multiple translation APIs (Google, DeepL, Microsoft).
+	- [ ] Allow fallback behavior if the preferred API fails.
+- [ ] Custom key formats when created allow options like snake_case, camelCase, kebab-case.
+- [ ] Statusbar action copy full translation path.
+- [ ] Visual highlights underline missing translations and color-code keys.
+- [ ] Key validation warn users of duplicate keys when added or renamed.
+- [ ] Diagnostics check translation files for issues and suggest quick fixes.
+- [ ] Option Auto-detect translation files within a project.
+- [ ] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
+- [ ] Sync missing translations ensure consistency across languages.
+- [ ] AI-based contextual translation suggestions. It analyzes code context to give more accurate translations.
+- [ ] Display inline hover editor for translation keys in code.
+- [ ] Search for keys or values that contain a specific string.
+- [ ] Auto-merge similar keys to reduce redundancy.
+- [ ] Suggest existing keys for reuse when adding new ones.
+- [ ] Optimized search for translation keys in large datasets.
+- [ ] Rename keys and update references in code automatically.
+- [ ] Detect and clean up unused translation keys automatically.
 
 ## Contributing
+
 Contributions are welcome! If you encounter any issues or have suggestions for improvements, feel free to open an issue or submit a pull request.
 
 ## License
+
 This project is licensed under the [MIT License](LICENSE.txt) - see the LICENSE file for details.
