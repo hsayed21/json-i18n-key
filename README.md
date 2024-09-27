@@ -43,19 +43,19 @@
 ## Extension Features in Action
 
 - **Find Translation Key**: Instantly navigate to the key in all translation files and highlight its position.  
-  ![find-key](assets/gif/find-key.gif)
+  ![find-key](src/assets/gif/find-key.gif)
 
 - **Add Translation Key with Copilot AI Auto-Translate**: Automatically generate translations when adding keys.  
-  ![add-key](assets/gif/add-key.gif)
+  ![add-key](src/assets/gif/add-key.gif)
 
 - **Rename Translation Key**: Rename keys consistently across all translation files.  
-  ![rename-key](assets/gif/rename-key.gif)
+  ![rename-key](src/assets/gif/rename-key.gif)
 
 - **Hover to View Translation**: See translation details by hovering over keys in the editor.  
-  ![hover-on-key](assets/gif/translation-on-hover.gif)
+  ![hover-on-key](src/assets/gif/translation-on-hover.gif)
 
 - **Auto-completion Suggestions**: Get intelligent key suggestions as you type.  
-  ![auto-suggestion](assets/gif/auto-suggestion.gif)
+  ![auto-suggestion](src/assets/gif/auto-suggestion.gif)
 
 
 ## Future TODO
