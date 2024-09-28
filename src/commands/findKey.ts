@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { findKeyPosition } from '../utils/jsonUtils';
+import { JsonParser } from '../utils/json-parser';
 
 async function findKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -48,7 +48,8 @@ async function findKeyCommand(): Promise<void> {
 			const openedEditor = await vscode.window.showTextDocument(document, { preview: false });
 
 			// This logic is from 'https://github.com/shanmuganathan-balaraman/jsonyamlkeynavigator'
-			const position = findKeyPosition(openedEditor, keyPath);
+			// const position = findKeyPosition(openedEditor, keyPath);
+			const position = new JsonParser(translationFile.filePath).findKeyPosition(openedEditor, keyPath);
 			if (position) {
 				const lineRange = openedEditor.document.lineAt(position.line).range;
 				openedEditor.selection = new vscode.Selection(lineRange.start, lineRange.end);

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { printChannelOutput } from './../extension';
-import { addKey } from '../utils/jsonUtils';
+import { JsonParser } from '../utils/json-parser';
 import { getTranslationFromCopilot } from '../utils/translationUtils';
 
 async function addKeyCommand(): Promise<void> {
@@ -11,7 +11,7 @@ async function addKeyCommand(): Promise<void> {
 
     let keyPath = '';
     const settings = vscode.workspace.getConfiguration('json-i18n-key');
-    const translationFiles: { filePath: string, lang: string, isDefault?: boolean }[] = settings.get('translationFiles', []);
+    const translationFiles: { filePath: string, lang: string, isDefault?: boolean; }[] = settings.get('translationFiles', []);
     if (settings.typeOfGetKey === 'Manual') {
         keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
     } else if (settings.typeOfGetKey === 'Clipboard') {
@@ -55,7 +55,8 @@ async function addKeyCommand(): Promise<void> {
             printChannelOutput(err);
         }
 
-        addKey(translationFile.filePath, keyPath, keyValue);
+        new JsonParser(translationFile.filePath, true).addKey(keyPath, keyPath);
+        // addKey(translationFile.filePath, keyPath, keyValue);
     }
 }
 

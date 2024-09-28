@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { checkExistKey } from '../utils/jsonUtils';
+import { JsonParser } from '../utils/json-parser';
 
 async function checkExistKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -37,7 +37,8 @@ async function checkExistKeyCommand(): Promise<void> {
 			vscode.window.showInformationMessage(`File path is required for ${translationFile.lang}`);
 			continue;
 		}
-		const isExist = checkExistKey(translationFile.filePath, keyPath);
+		// const isExist = checkExistKey(translationFile.filePath, keyPath);
+		const isExist = new JsonParser(translationFile.filePath).checkExistKey(keyPath);
 		if (isExist) {
 			vscode.window.showInformationMessage(`Key exists in ${translationFile.lang}`);
 		} else {

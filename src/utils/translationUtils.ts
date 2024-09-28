@@ -22,7 +22,7 @@ async function getTranslationFromCopilot(text: string, lang: string): Promise<st
 		chatResponse = await model.sendRequest(messages, {}, new vscode.CancellationTokenSource().token);
 	} catch (err) {
 		if (err instanceof vscode.LanguageModelError) {
-			console.log(err.message, err.code, err.cause);
+			// console.log(err.message, err.code, err.cause);
 		} else {
 			// If the error is not a LanguageModelError, you can rethrow it or handle it accordingly
 		}

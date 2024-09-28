@@ -11,11 +11,11 @@
   "categories": [
     "Programming Languages"
   ],
-  "icon": "assets/icon/icon.png",
+  "icon": "src/assets/icon/icon.png",
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -104,31 +104,6 @@
         }
       }
     },
-    "scripts": {
-      "vscode:prepublish": "npm run package",
-      "compile": "webpack",
-      "watch": "webpack --watch",
-      "package": "webpack --mode production --devtool hidden-source-map",
-      "compile-tests": "tsc -p . --outDir out",
-      "watch-tests": "tsc -p . -w --outDir out",
-      "pretest": "npm run compile-tests && npm run compile && npm run lint",
-      "lint": "eslint src",
-      "test": "vscode-test"
-    },
-    "devDependencies": {
-      "@types/vscode": "^1.93.0",
-      "@types/mocha": "^10.0.7",
-      "@types/node": "20.x",
-      "@typescript-eslint/eslint-plugin": "^8.3.0",
-      "@typescript-eslint/parser": "^8.3.0",
-      "eslint": "^9.9.1",
-      "typescript": "^5.5.4",
-      "ts-loader": "^9.5.1",
-      "webpack": "^5.94.0",
-      "webpack-cli": "^5.1.4",
-      "@vscode/test-cli": "^0.0.10",
-      "@vscode/test-electron": "^2.4.1"
-    },
     "keybindings": [
       {
         "command": "json-i18n-key.findKey",
@@ -170,5 +145,33 @@
     "translation",
     "internationalization",
     "localization"
-  ]
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.93.0",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.9.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "jsonpath-plus": "^9.0.0"
+  }
 }
