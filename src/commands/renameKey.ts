@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
+import { JsonI18nKeySettings } from '../models/settings';
 
 async function renameKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -9,8 +10,7 @@ async function renameKeyCommand(): Promise<void> {
 
 	let keyPath = '';
 	let newKey = '';
-	const settings = vscode.workspace.getConfiguration('json-i18n-key');
-	const translationFiles: { filePath: string, lang: string; }[] = settings.get('translationFiles', []);
+		const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
 
 	if (settings.typeOfGetKey === 'Manual') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
@@ -39,42 +39,41 @@ async function renameKeyCommand(): Promise<void> {
 		return;
 	}
 
-	for (const translationFile of translationFiles) {
+	for (const translationFile of settings.translationFiles) {
 		if (!translationFile.filePath) {
 			vscode.window.showErrorMessage(`Translation file path for ${translationFile.lang} does not exist`);
 			continue;
 		}
 
-		new JsonParser(translationFile.filePath).renamekey(keyPath, newKey);
-		// renameKey(translationFile.filePath, keyPath, newKey);
+		new JsonParser(translationFile.filePath, settings.preserveFormating).renamekey(keyPath, newKey);
 	}
 
 	// Update key in editor
-	// await editor.edit((editBuilder:any) => {
-	// 	const keys = keyPath.split('.');
-	// 	const text = editor.document.getText(editor.selection.isEmpty ? editor.document.lineAt(editor.selection.active).range : editor.selection);
+	await editor.edit((editBuilder) => {
+		const keys = keyPath.split('.');
+		const text = editor.document.getText(editor.selection.isEmpty ? editor.document.lineAt(editor.selection.active).range : editor.selection);
 
-	// 	// Detect the start and end quotes and replace them with the new key inside the same quotes
-	// 	const regex = new RegExp(`(['"])(${keyPath.replace(/^['"]|['"]$/g, '')})(['"])`, 'g');
+		// Detect the start and end quotes and replace them with the new key inside the same quotes
+		const regex = new RegExp(`(['"])(${keyPath.replace(/^['"]|['"]$/g, '')})(['"])`, 'g');
 
-	// 	// Preserve the quotes around the key
-	// 	const updatedText = text.replace(regex, (match, startQuote, oldKey, endQuote) => {
-	// 		if (keys.length === 1) {
-	// 			return `${startQuote}${newKey}${endQuote}`;
-	// 		} else {
-	// 			const path = keys.slice(0, -1).join('.');
-	// 			const newFullKey = `${path}.${newKey}`;
-	// 			return `${startQuote}${newFullKey}${endQuote}`;
-	// 		}
-	// 	});
+		// Preserve the quotes around the key
+		const updatedText = text.replace(regex, (match, startQuote, oldKey, endQuote) => {
+			if (keys.length === 1) {
+				return `${startQuote}${newKey}${endQuote}`;
+			} else {
+				const path = keys.slice(0, -1).join('.');
+				const newFullKey = `${path}.${newKey}`;
+				return `${startQuote}${newFullKey}${endQuote}`;
+			}
+		});
 
-	// 	if (editor.selection.isEmpty) {
-	// 		const lineRange = editor.document.lineAt(editor.selection.active).range;
-	// 		editBuilder.replace(lineRange, updatedText);
-	// 	} else {
-	// 		editBuilder.replace(editor.selection, updatedText);
-	// 	}
-	// });
+		if (editor.selection.isEmpty) {
+			const lineRange = editor.document.lineAt(editor.selection.active).range;
+			editBuilder.replace(lineRange, updatedText);
+		} else {
+			editBuilder.replace(editor.selection, updatedText);
+		}
+	});
 }
 
 export { renameKeyCommand };

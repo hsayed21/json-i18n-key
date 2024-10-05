@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
-import { checkExistKey } from '../utils/jsonUtils';
+import { JsonParser } from '../utils/json-parser';
+import { JsonI18nKeySettings } from '../models/settings';
 
-async function checkExistKeyCommand(): Promise<void> {
+async function removeKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
 	if (!editor) {
 		return; // No open text editor
 	}
 
 	let keyPath = '';
-	const settings = vscode.workspace.getConfiguration('json-i18n-key');
-	const translationFiles: { filePath: string, lang: string; }[] = settings.get('translationFiles', []);
+	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
 
 	if (settings.typeOfGetKey === 'Manual') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
@@ -28,22 +28,18 @@ async function checkExistKeyCommand(): Promise<void> {
 	}
 
 	if (!keyPath) {
-		vscode.window.showErrorMessage('Key Path is required');
+		vscode.window.showErrorMessage('Key path is required');
 		return;
 	}
 
-	for (const translationFile of translationFiles) {
+	for (const translationFile of settings.translationFiles) {
 		if (!translationFile.filePath) {
-			vscode.window.showInformationMessage(`File path is required for ${translationFile.lang}`);
+			vscode.window.showErrorMessage(`Translation file path for ${translationFile.lang} does not exist`);
 			continue;
 		}
-		const isExist = checkExistKey(translationFile.filePath, keyPath);
-		if (isExist) {
-			vscode.window.showInformationMessage(`Key exists in ${translationFile.lang}`);
-		} else {
-			vscode.window.showInformationMessage(`Key doesn't exist in ${translationFile.lang}`);
-		}
+
+		new JsonParser(translationFile.filePath, settings.preserveFormating).removeKey(keyPath);
 	}
 }
 
-export { checkExistKeyCommand };
+export { removeKeyCommand };

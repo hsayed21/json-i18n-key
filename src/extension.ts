@@ -3,11 +3,11 @@ import { findKeyCommand } from './commands/findKey';
 import { addKeyCommand } from './commands/addKey';
 import { checkExistKeyCommand } from './commands/checkKey';
 import { renameKeyCommand } from './commands/renameKey';
+import { removeKeyCommand } from './commands/removeKey';
+import { updateKeyCommand } from './commands/updateKey';
+import { getHoverTranslation, getKeysValues } from './utils/jsonUtils';
 
 let outputChannel: vscode.OutputChannel | undefined;
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 
 /**
  * This method is called when the extension is activated.
@@ -18,62 +18,64 @@ export function activate(context: vscode.ExtensionContext): void {
 	printChannelOutput('json-i18n-key is now active!');
 
 	// Register hover provider for multiple languages
-	// const hoverProvider = vscode.languages.registerHoverProvider(
-	// 	['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
-	// 	{
-	// 		async provideHover(document, position, token) {
-	// 			const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
-	// 			if (!range) {
-	// 				return;
-	// 			}
+	const hoverProvider = vscode.languages.registerHoverProvider(
+		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
+		{
+			async provideHover(document, position, token) {
+				const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
+				if (!range) {
+					return;
+				}
 
-	// 			let fullKeyPath = document.getText(range);
-	// 			// Remove surrounding quotes (single or double quotes) if they exist
-	// 			fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
+				let fullKeyPath = document.getText(range);
+				// Remove surrounding quotes (single or double quotes) if they exist
+				fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
 
-	// 			const hoverMessage = getHoverTranslation(fullKeyPath);
+				const hoverMessage = getHoverTranslation(fullKeyPath);
 
-	// 			return new vscode.Hover(hoverMessage);
-	// 		}
-	// 	}
-	// );
+				return new vscode.Hover(hoverMessage);
+			}
+		}
+	);
 
 	// Register completion provider for multiple languages
-	// const completionProvider = vscode.languages.registerCompletionItemProvider(
-	// 	['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
-	// 	{
-	// 		async provideCompletionItems(document, position, token, context) {
-	// 			const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
-	// 			if (!range) {
-	// 				return;
-	// 			}
+	const completionProvider = vscode.languages.registerCompletionItemProvider(
+		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
+		{
+			async provideCompletionItems(document, position, token, context) {
+				const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
+				if (!range) {
+					return;
+				}
 
-	// 			let fullKeyPath = document.getText(range);
-	// 			// Remove surrounding quotes (single or double quotes) if they exist
-	// 			fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
+				let fullKeyPath = document.getText(range);
+				// Remove surrounding quotes (single or double quotes) if they exist
+				fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
 
-	// 			const keys = getKeys(fullKeyPath);
-	// 			if (keys.length === 0) {
-	// 				return;
-	// 			}
+				const results = getKeysValues(fullKeyPath);
+				if (results.length === 0) {
+					return;
+				}
 
-	// 			return keys.map((key:any) => {
-	// 				const completionItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);
-	// 				completionItem.insertText = key;
-	// 				return completionItem;
-	// 			});
-	// 		}
-	// 	}
-	// );
+				return results.map((obj:any) => {
+					const completionItem = new vscode.CompletionItem(obj.parentProperty, vscode.CompletionItemKind.Field);
+					completionItem.documentation = new vscode.MarkdownString(obj.value);
+					return completionItem;
+				});
+			}
+		}
+	);
 
 	// Register commands and other providers
 	context.subscriptions.push(
 		vscode.commands.registerCommand('json-i18n-key.findKey', findKeyCommand),
-		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.checkExistKey', checkExistKeyCommand),
+		vscode.commands.registerCommand('json-i18n-key.removeKey', removeKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.renameKey', renameKeyCommand),
-		// hoverProvider,
-		// completionProvider
+		vscode.commands.registerCommand('json-i18n-key.updateKey', updateKeyCommand),
+		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
+		hoverProvider,
+		completionProvider
 	);
 }
 
@@ -85,7 +87,7 @@ export function activate(context: vscode.ExtensionContext): void {
  */
 export function printChannelOutput(content: any, reveal: boolean = false): void {
 	if (!outputChannel) {
-		// console.error("Output channel is not initialized.");
+		console.error("Output channel is not initialized.");
 		return;
 	}
 	const output = typeof content === "string" ? content : JSON.stringify(content, null, 2);

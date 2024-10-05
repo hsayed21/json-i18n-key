@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { printChannelOutput } from './../extension';
 import { JsonParser } from '../utils/json-parser';
 import { getTranslationFromCopilot } from '../utils/translationUtils';
+import { JsonI18nKeySettings } from '../models/settings';
 
 async function addKeyCommand(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
@@ -10,8 +11,7 @@ async function addKeyCommand(): Promise<void> {
     }
 
     let keyPath = '';
-    const settings = vscode.workspace.getConfiguration('json-i18n-key');
-    const translationFiles: { filePath: string, lang: string, isDefault?: boolean; }[] = settings.get('translationFiles', []);
+    const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
     if (settings.typeOfGetKey === 'Manual') {
         keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
     } else if (settings.typeOfGetKey === 'Clipboard') {
@@ -34,7 +34,7 @@ async function addKeyCommand(): Promise<void> {
     }
 
     let keyValue = '';
-    for (const translationFile of translationFiles) {
+    for (const translationFile of settings.translationFiles) {
         if (!translationFile.filePath) {
             vscode.window.showErrorMessage('Translation file path is required');
             return;
@@ -55,8 +55,7 @@ async function addKeyCommand(): Promise<void> {
             printChannelOutput(err);
         }
 
-        new JsonParser(translationFile.filePath, true).addKey(keyPath, keyPath);
-        // addKey(translationFile.filePath, keyPath, keyValue);
+        new JsonParser(translationFile.filePath, settings.preserveFormating).addKey(keyPath, keyValue);
     }
 }
 

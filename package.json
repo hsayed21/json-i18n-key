@@ -11,7 +11,7 @@
   "categories": [
     "Programming Languages"
   ],
-  "icon": "src/assets/icon/icon.png",
+  "icon": "icon.png",
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -36,6 +36,16 @@
       {
         "command": "json-i18n-key.renameKey",
         "title": "Rename Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.removeKey",
+        "title": "Remove Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.updateKey",
+        "title": "Update Translation Key",
         "category": "Json I18n Key"
       }
     ],
@@ -101,6 +111,11 @@
           "type": "boolean",
           "description": "Enable Copilot AI Translation.",
           "default": true
+        },
+        "json-i18n-key.preserveFormating": {
+          "type": "boolean",
+          "description": "Preserve formatting when saving.",
+          "default": false
         }
       }
     },
