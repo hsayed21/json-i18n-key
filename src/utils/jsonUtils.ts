@@ -79,29 +79,18 @@ export function findKeyPosition(editor: vscode.TextEditor, path: string): vscode
 	}
 	return null;
 }
-export function getParentObject(jsonData: JsonObject, keyPath: string): JsonObject | undefined {
-	const keys = keyPath.split('.');
-	const lastKey = keys.pop();
 
-	if (!lastKey) {
-		return undefined;
-	}
+export function getOrCreateParentObject(jsonData: JsonObject, keyPath: string): JsonObject {
+	const keys = keyPath.split('.');
+	keys.pop(); // Remove the last key as it's the key to be added.
 
 	let parent: JsonObject = jsonData;
 
 	for (const key of keys) {
-		if (isJsonObject(parent) && key in parent) {
-			const next = parent[key];
-			if (isJsonObject(next)) {
-				parent = next;
-			} else {
-				console.error(`Key path '${keyPath}' leads to a non-object value.`);
-				return undefined;
-			}
-		} else {
-			console.error(`Invalid key path: ${keyPath}`);
-			return undefined;
+		if (!isJsonObject(parent[key])) {
+			parent[key] = {}; // Create an intermediate object if it doesn't exist
 		}
+		parent = parent[key] as JsonObject;
 	}
 
 	return parent;

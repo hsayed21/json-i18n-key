@@ -1,7 +1,7 @@
 import { loadJsonFileSync, writeJsonFileSync } from './fileUtils';
 import * as vscode from 'vscode';
 import { JSONPath } from 'jsonpath-plus';
-import { checkExistKey, getKeyValue, getParentObject } from './jsonUtils';
+import { checkExistKey, getKeyValue, getOrCreateParentObject } from './jsonUtils';
 
 
 export class JsonParser {
@@ -178,21 +178,16 @@ export class JsonParser {
             }
         }
         else {
-            const parent = getParentObject(jsonData, keyPath);
-            if (parent)
-            {
-                const lastKey = keyPath.split('.').pop() as string;
-                if (lastKey in parent) {
-                    this.updateKey(keyPath, value || lastKey);
-                    return;
-                }
-                parent[lastKey] = value || lastKey;
-                writeJsonFileSync(this.jsonFilePath, jsonData, this.preserveFormatting);
-                vscode.window.showInformationMessage('Key added to ' + this.jsonFilePath);
+            const parent = getOrCreateParentObject(jsonData, keyPath);
+            const lastKey = keyPath.split('.').pop() as string;
+            if (lastKey in parent) {
+                this.updateKey(keyPath, value || lastKey);
             }
             else
             {
-                throw new Error('Cannot find parent object for key path:'+ keyPath);
+                parent[lastKey] = value || lastKey;
+                writeJsonFileSync(this.jsonFilePath, jsonData, this.preserveFormatting);
+                vscode.window.showInformationMessage('Key added to ' + this.jsonFilePath);
             }
         }
     }
