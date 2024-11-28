@@ -125,6 +125,9 @@ export class JsonParser {
             const matches = this.getRegexMatches(jsonData, keyPath);
             if (matches) {
                 const key = keyPath.split('.').pop();
+                if (newValue === "" && key !== undefined)
+                    newValue = key
+
                 const objData = `"${[key]}": "${newValue}"${matches.comma}`;
 
                 const updatedContent = jsonData.slice(0, matches.startChangeIndex) + objData + jsonData.slice(matches.endChangeIndex);
@@ -159,6 +162,8 @@ export class JsonParser {
             const newKey = parentKeys.pop();
             const parentPath = "$." + parentKeys.join('.') + ".*";
             let lastKeyObj = JSONPath({ json: JSON.parse(jsonData), path: parentPath, resultType: "all" }).pop();
+            if (value === "" && newKey !== undefined)
+                value = newKey;
             if (lastKeyObj.parentProperty == newKey || (newKey! in lastKeyObj.parent)) {
                 this.updateKey(keyPath, value);
                 return;

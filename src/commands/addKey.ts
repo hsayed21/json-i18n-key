@@ -10,10 +10,10 @@ async function addKeyCommand(): Promise<void> {
         return; // No open text editor
     }
 
-    let keyPath = '';
+    let keyPath = undefined;
     const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
     if (settings.typeOfGetKey === 'Manual') {
-        keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
+        keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
     } else if (settings.typeOfGetKey === 'Clipboard') {
         const clipboard = await vscode.env.clipboard.readText();
         keyPath = clipboard;
@@ -27,6 +27,9 @@ async function addKeyCommand(): Promise<void> {
             keyPath = editor.document.getText(editor.selection);
         }
     }
+
+    if (keyPath === undefined)
+        return;
 
     if (!keyPath) {
         vscode.window.showErrorMessage('Key Path is required');
