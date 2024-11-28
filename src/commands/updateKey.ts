@@ -8,13 +8,13 @@ async function updateKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
-	let keyPath = '';
-	let newValue = '';
+	let keyPath = undefined;
+	let newValue = undefined;
 	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
 
 
 	if (settings.typeOfGetKey === 'Manual') {
-		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
+		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
 	} else if (settings.typeOfGetKey === 'Clipboard') {
 		const clipboard = await vscode.env.clipboard.readText();
 		keyPath = clipboard;
@@ -29,12 +29,19 @@ async function updateKeyCommand(): Promise<void> {
 		}
 	}
 
+	if (keyPath === undefined)
+		return;
+
 	if (!keyPath) {
 		vscode.window.showErrorMessage('Key path is required');
 		return;
 	}
 
-	newValue = await vscode.window.showInputBox({ prompt: 'Enter new value:' }) || '';
+	newValue = await vscode.window.showInputBox({ prompt: 'Enter new value:' });
+
+	if (newValue === undefined)
+		return;
+	
 	if (!newValue) {
 		vscode.window.showErrorMessage('New value is required');
 		return;

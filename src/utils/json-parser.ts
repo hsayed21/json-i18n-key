@@ -61,7 +61,7 @@ export class JsonParser {
             }
         }
         else {
-            const parent = getParentObject(jsonData, keyPath);
+            const parent = getOrCreateParentObject(jsonData, keyPath);
             if (parent) {
                 const lastKey = keyPath.split('.').pop() as string;
                 if ((lastKey in parent) === false) {
@@ -99,7 +99,7 @@ export class JsonParser {
             }
         }
         else {
-            const parent = getParentObject(jsonData, keyPath);
+            const parent = getOrCreateParentObject(jsonData, keyPath);
             if (parent) {
                 const lastKey = keyPath.split('.').pop() as string;
                 if ((lastKey in parent) === false) {
@@ -135,7 +135,7 @@ export class JsonParser {
             }
         }
         else {
-            const parent = getParentObject(jsonData, keyPath);
+            const parent = getOrCreateParentObject(jsonData, keyPath);
             if (parent) {
                 const lastKey = keyPath.split('.').pop() as string;
                 if ((lastKey in parent) === false) {

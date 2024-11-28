@@ -8,15 +8,15 @@ async function findKeyCommand(): Promise<void> {
 	}
 
 	const document = editor.document;
-	let keyPath = '';
+	let keyPath = undefined;
 	const settings = vscode.workspace.getConfiguration('json-i18n-key');
 	const translationFiles: { filePath: string, lang: string; }[] = settings.get('translationFiles', []);
 
 	if (document.languageId === 'json') {
-		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
+		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
 	} else {
 		if (settings.typeOfGetKey === 'Manual') {
-			keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' }) || '';
+			keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
 		} else if (settings.typeOfGetKey === 'Clipboard') {
 			const clipboard = await vscode.env.clipboard.readText();
 			keyPath = clipboard;
@@ -30,11 +30,14 @@ async function findKeyCommand(): Promise<void> {
 				keyPath = editor.document.getText(editor.selection);
 			}
 		}
+	}
 
-		if (!keyPath) {
-			vscode.window.showErrorMessage('Key path is required');
-			return;
-		}
+	if (keyPath === undefined)
+		return;
+
+	if (!keyPath) {
+		vscode.window.showErrorMessage('Key path is required');
+		return;
 	}
 
 	for (const translationFile of translationFiles) {

@@ -33,7 +33,7 @@ async function addKeyCommand(): Promise<void> {
         return;
     }
 
-    let keyValue = '';
+    let keyValue = undefined;
     for (const translationFile of settings.translationFiles) {
         if (!translationFile.filePath) {
             vscode.window.showErrorMessage('Translation file path is required');
@@ -41,8 +41,11 @@ async function addKeyCommand(): Promise<void> {
         }
 
         if (translationFile.isDefault && translationFile.lang === 'en') {
-            keyValue = await vscode.window.showInputBox({ prompt: 'Enter Key Value for ' + translationFile.lang + ':' }) || '';
+            keyValue = await vscode.window.showInputBox({ prompt: 'Enter Key Value for ' + translationFile.lang + ':' });
         }
+
+        if (keyValue === undefined)
+            return
 
         try {
             if (settings.enableCopilotTranslation && keyValue && translationFile.lang !== 'en') {
