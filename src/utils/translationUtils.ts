@@ -13,7 +13,7 @@ async function getTranslationFromCopilot(text: string, lang: string): Promise<st
 	}
 
 	const messages: vscode.LanguageModelChatMessage[] = [
-		vscode.LanguageModelChatMessage.User(`Translate "${text}" to ${lang}. Return only the translated text.`),
+		vscode.LanguageModelChatMessage.User(`Translate the text "${text}" to ${lang}. Provide ONLY the translated text with no additional explanation, code blocks, or formatting. Return the translation as plain text.`),
 	];
 
 	// Sending the prompt

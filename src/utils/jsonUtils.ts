@@ -1,9 +1,9 @@
+import { JsonI18nKeySettings } from './../models/settings';
 import { JsonObject } from '../models/jsonObject';
 import * as vscode from 'vscode';
 import { loadJsonFileSync } from './fileUtils';
 import { JSONPath } from 'jsonpath-plus';
 import { printChannelOutput } from '../extension';
-import { JsonI18nKeySettings } from '../models/settings';
 
 export function checkExistKey(jsonFilePath: string, keyPath: string): boolean {
 	const jsonData = loadJsonFileSync(jsonFilePath, false);

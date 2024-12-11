@@ -69,7 +69,7 @@
 - [ ] Key validation warn users of duplicate keys when added or renamed.
 - [ ] Diagnostics check translation files for issues and suggest quick fixes.
 - [ ] Option Auto-detect translation files within a project.
-- [ ] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
+- [x] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
 - [ ] Sync missing translations ensure consistency across languages.
 - [ ] AI-based contextual translation suggestions. It analyzes code context to give more accurate translations.
 - [ ] Display inline hover editor for translation keys in code.
