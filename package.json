@@ -170,9 +170,14 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "clean:vsix": "powershell -Command \"Remove-Item *.vsix -Force -ErrorAction SilentlyContinue\"",
+    "release": "npm run clean:vsix && release-it --ci && vsce package && release-it --ci --no-increment --github.release --github.update --github.assets='*${version}.vsix' --no-github.draft --no-git.tag --no-git.commit --no-git.push",
+    "minor": "npm run clean:vsix && release-it -i minor && vsce package && release-it --no-increment --github.release --github.update --github.assets='*${version}.vsix' --no-github.draft --no-git.tag --no-git.commit --no-git.push",
+    "major": "npm run clean:vsix && release-it -i major && vsce package && release-it --no-increment --github.release --github.update --github.assets='*${version}.vsix' --no-github.draft --no-git.tag --no-git.commit --no-git.push"
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^9.0.3",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "@types/vscode": "^1.93.0",
@@ -181,6 +186,7 @@
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.9.1",
+    "release-it": "^17.10.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.94.0",
@@ -188,5 +194,41 @@
   },
   "dependencies": {
     "jsonpath-plus": "^9.0.0"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v${version}",
+      "requireCleanWorkingDir": false,
+      "requireCommits": true,
+      "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+    },
+    "hooks": {
+      "after:npm:bump": "npx auto-changelog -p"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "v${version}"
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "conventionalcommits",
+          "types": [
+            {
+              "type": "feat",
+              "section": "Features"
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes"
+            },
+            {}
+          ]
+        }
+      }
+    }
   }
 }
