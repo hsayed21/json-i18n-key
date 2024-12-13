@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
-import { JsonI18nKeySettings } from '../models/settings';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 async function removeKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -9,7 +9,7 @@ async function removeKeyCommand(): Promise<void> {
 	}
 
 	let keyPath = undefined;
-	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
+	const settings = JsonI18nKeySettings.instance;
 
 	if (settings.typeOfGetKey === 'Manual') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });

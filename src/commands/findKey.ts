@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { findKeyPosition } from '../utils/jsonUtils';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 async function findKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -9,8 +10,7 @@ async function findKeyCommand(): Promise<void> {
 
 	const document = editor.document;
 	let keyPath = undefined;
-	const settings = vscode.workspace.getConfiguration('json-i18n-key');
-	const translationFiles: { filePath: string, lang: string; }[] = settings.get('translationFiles', []);
+	const settings = JsonI18nKeySettings.instance;
 
 	if (document.languageId === 'json') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
@@ -40,7 +40,7 @@ async function findKeyCommand(): Promise<void> {
 		return;
 	}
 
-	for (const translationFile of translationFiles) {
+	for (const translationFile of settings.translationFiles) {
 		if (!translationFile.filePath) {
 			vscode.window.showErrorMessage(`Translation file path for ${translationFile.lang} does not exist`);
 			continue;

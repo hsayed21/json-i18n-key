@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { printChannelOutput } from './../extension';
 import { JsonParser } from '../utils/json-parser';
 import { getTranslationFromCopilot } from '../utils/translationUtils';
-import { JsonI18nKeySettings } from '../models/settings';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 async function addKeyCommand(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
@@ -11,7 +11,7 @@ async function addKeyCommand(): Promise<void> {
     }
 
     let keyPath = undefined;
-    const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
+    const settings = JsonI18nKeySettings.instance;
     if (settings.typeOfGetKey === 'Manual') {
         keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
     } else if (settings.typeOfGetKey === 'Clipboard') {

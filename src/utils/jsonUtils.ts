@@ -1,4 +1,4 @@
-import { JsonI18nKeySettings } from './../models/settings';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { JsonObject } from '../models/jsonObject';
 import * as vscode from 'vscode';
 import { loadJsonFileSync } from './fileUtils';
@@ -17,13 +17,11 @@ export function getKeyValue(jsonFilePath: string, keyPath: string): string {
 }
 
 export function getKeysValues(keyPath: string): string[] {
-	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
-	const enFile = settings.translationFiles.find(file => file.lang === 'en' && file.isDefault == true);
-	if (!enFile || enFile.filePath === '') {
+	if (JsonI18nKeySettings.instance.enJsonFilePath === '') {
 		printChannelOutput('English translation file not found');
 		return [];
 	}
-	const jsonData = loadJsonFileSync(enFile.filePath);
+	const jsonData = loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath);
 	// const parentKey = keyPath.split('.').slice(0, -1).join('.');
 	const keys = keyPath.split('.');
 	const lastKey = keys.pop() as string;
@@ -37,10 +35,9 @@ export function getKeysValues(keyPath: string): string[] {
 }
 
 export function getHoverTranslation(keyPath: string): vscode.MarkdownString {
-	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
 	const hoverMessage = new vscode.MarkdownString();
 	hoverMessage.appendMarkdown(`**Key:** \`${keyPath}\`\n\n`);
-	for (const translationFile of settings.translationFiles) {
+	for (const translationFile of JsonI18nKeySettings.instance.translationFiles) {
 		if (translationFile.filePath) {
 			const keyValue = getKeyValue(translationFile.filePath, keyPath);
 			hoverMessage.appendMarkdown(`**${translationFile.lang.toUpperCase()}:** ${keyValue || 'N/A'}\n\n`);
@@ -98,4 +95,25 @@ export function getOrCreateParentObject(jsonData: JsonObject, keyPath: string): 
 
 export function isJsonObject(obj: unknown): obj is JsonObject {
 	return obj !== null && typeof obj === 'object';
+}
+
+export function loadKeys() {
+	if (JsonI18nKeySettings.instance.enJsonFilePath === '') {
+		printChannelOutput('English translation file not found');
+		return [];
+	}
+
+	return flattenKeys(loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath));
+}
+
+function flattenKeys(obj: any, prefix = ''): string[] {
+	return Object.keys(obj).reduce((acc, key) => {
+			const path = prefix ? `${prefix}.${key}` : key;
+			if (typeof obj[key] === 'object' && obj[key] !== null) {
+					acc.push(...flattenKeys(obj[key], path));
+			} else {
+					acc.push(path);
+			}
+			return acc;
+	}, [] as string[]);
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
-import { JsonI18nKeySettings } from '../models/settings';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 async function updateKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -10,7 +10,7 @@ async function updateKeyCommand(): Promise<void> {
 
 	let keyPath = undefined;
 	let newValue = undefined;
-	const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as JsonI18nKeySettings;
+	const settings = JsonI18nKeySettings.instance;
 
 
 	if (settings.typeOfGetKey === 'Manual') {

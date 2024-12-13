@@ -60,7 +60,7 @@
 
 ## Future TODO
 
-- [ ] Cache keys and refresh caching when files change.
+- [x] Cache keys and refresh caching when files change "Optimize Search".
 - [ ] Support multiple translation APIs (Google, DeepL, Microsoft).
 	- [ ] Allow fallback behavior if the preferred API fails.
 - [ ] Custom key formats when created allow options like snake_case, camelCase, kebab-case.
@@ -76,7 +76,6 @@
 - [ ] Search for keys or values that contain a specific string.
 - [ ] Auto-merge similar keys to reduce redundancy.
 - [ ] Suggest existing keys for reuse when adding new ones.
-- [ ] Optimized search for translation keys in large datasets.
 - [ ] Rename keys and update references in code automatically.
 - [ ] Detect and clean up unused translation keys automatically.
 

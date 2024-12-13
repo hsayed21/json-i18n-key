@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { checkExistKey } from '../utils/jsonUtils';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 async function checkExistKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -8,8 +9,7 @@ async function checkExistKeyCommand(): Promise<void> {
 	}
 
 	let keyPath = undefined;
-	const settings = vscode.workspace.getConfiguration('json-i18n-key');
-	const translationFiles: { filePath: string, lang: string; }[] = settings.get('translationFiles', []);
+	const settings = JsonI18nKeySettings.instance;
 
 	if (settings.typeOfGetKey === 'Manual') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
@@ -35,7 +35,7 @@ async function checkExistKeyCommand(): Promise<void> {
 		return;
 	}
 
-	for (const translationFile of translationFiles) {
+	for (const translationFile of settings.translationFiles) {
 		if (!translationFile.filePath) {
 			vscode.window.showInformationMessage(`File path is required for ${translationFile.lang}`);
 			continue;

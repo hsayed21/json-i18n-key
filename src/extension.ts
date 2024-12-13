@@ -5,9 +5,11 @@ import { checkExistKeyCommand } from './commands/checkKey';
 import { renameKeyCommand } from './commands/renameKey';
 import { removeKeyCommand } from './commands/removeKey';
 import { updateKeyCommand } from './commands/updateKey';
-import { getHoverTranslation, getKeysValues } from './utils/jsonUtils';
+import { getHoverTranslation, loadKeys } from './utils/jsonUtils';
+import { JsonI18nKeySettings } from './models/JsonI18nKeySettings';
 
 let outputChannel: vscode.OutputChannel | undefined;
+let keyCache: string[] = [];
 
 /**
  * This method is called when the extension is activated.
@@ -49,22 +51,55 @@ export function activate(context: vscode.ExtensionContext): void {
 				}
 
 				let fullKeyPath = document.getText(range);
+				// if (context.triggerKind !== vscode.CompletionTriggerKind.TriggerCharacter) {
+					const textBeforeCursor = document.getText(new vscode.Range(range.start, position));
+					fullKeyPath = textBeforeCursor;
+				// }
 				// Remove surrounding quotes (single or double quotes) if they exist
 				fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
 
-				const results = getKeysValues(fullKeyPath);
-				if (results.length === 0) {
-					return;
-				}
-
-				return results.map((obj:any) => {
-					const completionItem = new vscode.CompletionItem(obj.parentProperty, vscode.CompletionItemKind.Field);
-					completionItem.documentation = new vscode.MarkdownString(obj.value);
+				const uniqueKeys = Array.from(
+					new Set( keyCache
+									.filter(key => key.startsWith(fullKeyPath))
+									.map((key: string) => {
+											const str = key.slice(fullKeyPath.lastIndexOf('.') + 1, key.length);
+											if (str.indexOf('.') === -1) {
+												return str;
+                      }
+											const nextKey = str.slice(0, str.indexOf('.'));
+											return nextKey;
+									})
+					)
+				);
+				return uniqueKeys.map((key: string) => {
+					const completionItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);
+					completionItem.documentation = new vscode.MarkdownString(key);
+					completionItem.detail = "i18n key";
 					return completionItem;
 				});
-			}
-		}
+			},
+		},
+		'.' // Trigger on `.`
 	);
+
+
+	// Set up file watcher for en.json
+	const watcher = vscode.workspace.createFileSystemWatcher(JsonI18nKeySettings.instance.enJsonFilePath);
+	watcher.onDidChange(() => {
+			console.log('en.json changed, reloading keys...');
+			keyCache = loadKeys();
+	});
+	watcher.onDidCreate(() => {
+			console.log('en.json created, loading keys...');
+			keyCache = loadKeys();
+	});
+	watcher.onDidDelete(() => {
+			console.log('en.json deleted, clearing cache...');
+			keyCache = [];
+	});
+
+	// Load keys initially
+	keyCache = loadKeys();
 
 	// Register commands and other providers
 	context.subscriptions.push(
@@ -75,7 +110,8 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.updateKey', updateKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
 		hoverProvider,
-		completionProvider
+		completionProvider,
+		watcher,
 	);
 }
 
