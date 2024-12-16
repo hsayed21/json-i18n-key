@@ -66,7 +66,7 @@
 - [ ] Custom key formats when created allow options like snake_case, camelCase, kebab-case.
 - [ ] Statusbar action copy full translation path.
 - [ ] Visual highlights underline missing translations and color-code keys.
-- [ ] Key validation warn users of duplicate keys when added or renamed.
+- [x] Key validation warn users of duplicate keys when added or updated.
 - [ ] Diagnostics check translation files for issues and suggest quick fixes.
 - [ ] Option Auto-detect translation files within a project.
 - [x] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.

@@ -116,7 +116,18 @@
           "type": "boolean",
           "description": "Preserve formatting when saving.",
           "default": false
+        },
+        "json-i18n-key.overrideKeyIfExistsWhenAdding": {
+          "type": "boolean",
+          "description": "Override the key if it already exists when adding a new key.",
+          "default": false
+        },
+        "json-i18n-key.overrideKeyIfExistsWhenUpdating": {
+          "type": "boolean",
+          "description": "Override the key if it already exists when updating key.",
+          "default": true
         }
+
       }
     },
     "keybindings": [
@@ -199,7 +210,6 @@
     "git": {
       "commitMessage": "chore: release v${version}",
       "requireCleanWorkingDir": false,
-      "requireCommits": true,
       "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
     },
     "hooks": {
