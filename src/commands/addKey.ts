@@ -4,6 +4,7 @@ import { JsonParser } from '../utils/json-parser';
 import { getTranslationFromCopilot } from '../utils/translationUtils';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { convertCase } from '../utils/globalUtils';
+import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 
 async function addKeyCommand(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
@@ -11,8 +12,15 @@ async function addKeyCommand(): Promise<void> {
         return; // No open text editor
     }
 
+    await autoDetectI18nFiles()
+
     let keyPath = undefined;
     const settings = JsonI18nKeySettings.instance;
+    if (settings.translationFiles.length === 0) {
+        vscode.window.showErrorMessage('No translation files found');
+        return;
+    }
+    
     if (settings.typeOfGetKey === 'Manual') {
         keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
     } else if (settings.typeOfGetKey === 'Clipboard') {

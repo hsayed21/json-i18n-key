@@ -145,6 +145,11 @@
             "Use snake_case (e.g., my_json_key).",
             "Use kebab-case (e.g., my-json-key)."
           ]
+        },
+        "json-i18n-key.autoDetectTranslations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable auto-detection of i18n translation files within the project."
         }
       }
     },

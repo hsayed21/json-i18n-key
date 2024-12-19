@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
+import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 
 async function updateKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -8,10 +9,15 @@ async function updateKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
+	await autoDetectI18nFiles()
+
 	let keyPath = undefined;
 	let newValue = undefined;
 	const settings = JsonI18nKeySettings.instance;
-
+	if (settings.translationFiles.length === 0) {
+		vscode.window.showErrorMessage('No translation files found');
+		return;
+	}
 
 	if (settings.typeOfGetKey === 'Manual') {
 		keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });

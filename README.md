@@ -68,7 +68,7 @@
 - [ ] Visual highlights underline missing translations and color-code keys.
 - [x] Key validation warn users of duplicate keys when added or updated.
 - [ ] Diagnostics check translation files for issues and suggest quick fixes.
-- [ ] Option Auto-detect translation files within a project.
+- [x] Option Auto-detect i18n translation files within a project.
 - [x] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
 - [ ] Sync missing translations ensure consistency across languages.
 - [ ] AI-based contextual translation suggestions. It analyzes code context to give more accurate translations.
