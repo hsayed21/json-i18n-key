@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
+import { convertCase } from '../utils/globalUtils';
 
 async function renameKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -45,6 +46,8 @@ async function renameKeyCommand(): Promise<void> {
 		vscode.window.showErrorMessage('New Key is required');
 		return;
 	}
+
+  newKey = convertCase(newKey);
 
 	for (const translationFile of settings.translationFiles) {
 		if (!translationFile.filePath) {

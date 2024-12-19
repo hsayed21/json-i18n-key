@@ -126,8 +126,26 @@
           "type": "boolean",
           "description": "Override the key if it already exists when updating key.",
           "default": true
+        },
+        "json-i18n-key.keyFormat": {
+          "type": "string",
+          "description": "Format of the json keys.",
+          "default": "None",
+          "enum": [
+            "None",
+            "PascalCase",
+            "camelCase",
+            "snake_case",
+            "kebab-case"
+          ],
+          "enumDescriptions": [
+            "None of the following formats.",
+            "Use PascalCase (e.g., MyJsonKey).",
+            "Use camelCase (e.g., myJsonKey).",
+            "Use snake_case (e.g., my_json_key).",
+            "Use kebab-case (e.g., my-json-key)."
+          ]
         }
-
       }
     },
     "keybindings": [

@@ -63,7 +63,7 @@
 - [x] Cache keys and refresh caching when files change "Optimize Search".
 - [ ] Support multiple translation APIs (Google, DeepL, Microsoft).
 	- [ ] Allow fallback behavior if the preferred API fails.
-- [ ] Custom key formats when created allow options like snake_case, camelCase, kebab-case.
+- [x] Custom key formats when created or renamed allow options like PascalCase, snake_case, camelCase, kebab-case.
 - [ ] Statusbar action copy full translation path.
 - [ ] Visual highlights underline missing translations and color-code keys.
 - [x] Key validation warn users of duplicate keys when added or updated.

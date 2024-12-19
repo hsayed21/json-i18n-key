@@ -3,13 +3,14 @@ import * as vscode from 'vscode';
 export class JsonI18nKeySettings {
 	private static _instance: JsonI18nKeySettings;
 
-	translationFiles: TranslationFile[] = [];
+	enJsonFilePath: string;
+	translationFiles: TranslationFile[];
 	typeOfGetKey: 'Selection' | 'Clipboard' | 'Manual';
-	enableCopilotTranslation: boolean = false;
-	preserveFormating: boolean = false;
-	overrideKeyIfExistsWhenAdding: boolean = false;
-	overrideKeyIfExistsWhenUpdating: boolean = true;
-	enJsonFilePath: string = '';
+	enableCopilotTranslation: boolean;
+	preserveFormating: boolean;
+	overrideKeyIfExistsWhenAdding: boolean;
+	overrideKeyIfExistsWhenUpdating: boolean;
+	keyFormat: 'None' | 'PascalCase' | 'camelCase' |'snake_case' | 'kebab-case';
 
 	private constructor() {
 			const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as Settings;
@@ -19,6 +20,7 @@ export class JsonI18nKeySettings {
 			this.preserveFormating = settings.preserveFormating;
 			this.overrideKeyIfExistsWhenAdding = settings.overrideKeyIfExistsWhenAdding;
 			this.overrideKeyIfExistsWhenUpdating = settings.overrideKeyIfExistsWhenUpdating;
+			this.keyFormat = settings.keyFormat;
 		  this.enJsonFilePath = settings.translationFiles.find(file => file.lang === 'en' && file.isDefault == true)?.filePath || '';
 	}
 
@@ -38,6 +40,7 @@ interface Settings {
 	preserveFormating: boolean;
 	overrideKeyIfExistsWhenAdding: boolean;
 	overrideKeyIfExistsWhenUpdating: boolean;
+	keyFormat: 'None' | 'PascalCase' | 'camelCase' | 'snake_case' | 'kebab-case';
 }
 
 interface TranslationFile {
