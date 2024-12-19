@@ -20,7 +20,7 @@ async function updateKeyCommand(): Promise<void> {
 		keyPath = clipboard;
 	} else {
 		const position = editor.selection.active;
-		const range = editor.document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
+		const range = editor.document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
 		if (range) {
 			keyPath = editor.document.getText(range);
 			keyPath = keyPath.replace(/^['"]|['"]$/g, '');

@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
 		{
 			async provideHover(document, position, token) {
-				const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
+				const range = document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
 				if (!range) {
 					return;
 				}
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
 		{
 			async provideCompletionItems(document, position, token, context) {
-				const range = document.getWordRangeAtPosition(position, /['"]([\w\.]+)['"]/);
+				const range = document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
 				if (!range) {
 					return;
 				}
