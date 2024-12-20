@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
+import { JsonI18nKeySettings } from './models/JsonI18nKeySettings';
+import { getHoverTranslation, loadKeys } from './utils/jsonUtils';
+import { removeKeyCommand } from './commands/removeKey';
+import { renameKeyCommand } from './commands/renameKey';
+import { searchKeyCommand } from './commands/searchKey';
+import { updateKeyCommand } from './commands/updateKey';
 import { findKeyCommand } from './commands/findKey';
 import { addKeyCommand } from './commands/addKey';
 import { checkExistKeyCommand } from './commands/checkKey';
-import { renameKeyCommand } from './commands/renameKey';
-import { removeKeyCommand } from './commands/removeKey';
-import { updateKeyCommand } from './commands/updateKey';
-import { getHoverTranslation, loadKeys } from './utils/jsonUtils';
-import { JsonI18nKeySettings } from './models/JsonI18nKeySettings';
 
 let outputChannel: vscode.OutputChannel | undefined;
 let keyCache: string[] = [];
@@ -109,6 +110,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.renameKey', renameKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.updateKey', updateKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
+		vscode.commands.registerCommand('json-i18n-key.searchKey', searchKeyCommand),
 		hoverProvider,
 		completionProvider,
 		watcher,

@@ -20,7 +20,7 @@
     "commands": [
       {
         "command": "json-i18n-key.findKey",
-        "title": "Find Translation Key",
+        "title": "Find Translation Key in i18n JSON files",
         "category": "Json I18n Key"
       },
       {
@@ -46,6 +46,11 @@
       {
         "command": "json-i18n-key.updateKey",
         "title": "Update Translation Key",
+        "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.searchKey",
+        "title": "Search Translation Key",
         "category": "Json I18n Key"
       }
     ],

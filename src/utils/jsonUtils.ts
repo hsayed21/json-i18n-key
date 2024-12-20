@@ -106,7 +106,7 @@ export function loadKeys() {
 	return flattenKeys(loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath));
 }
 
-function flattenKeys(obj: any, prefix = ''): string[] {
+export function flattenKeys(obj: any, prefix = ''): string[] {
 	return Object.keys(obj).reduce((acc, key) => {
 			const path = prefix ? `${prefix}.${key}` : key;
 			if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -117,3 +117,16 @@ function flattenKeys(obj: any, prefix = ''): string[] {
 			return acc;
 	}, [] as string[]);
 }
+
+export function flattenKeysWithValues(obj: any, prefix = ''): { key: string, value: any }[] {
+	return Object.keys(obj).reduce((acc, key) => {
+		const path = prefix ? `${prefix}.${key}` : key;
+		if (typeof obj[key] === 'object' && obj[key] !== null) {
+			acc.push(...flattenKeysWithValues(obj[key], path));
+		} else {
+			acc.push({ key: path, value: obj[key] });
+		}
+		return acc;
+	}, [] as { key: string, value: any }[]);
+}
+

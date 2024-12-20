@@ -14,6 +14,7 @@
 - **Multi-language Support**: Supports various languages like `en`, `ar`, or any other language files configured.
 - **Copilot AI Auto-Translate**: Automatically generate translation suggestions for new keys using GitHub Copilot AI, enhancing the translation workflow.
 - **Translation Path Configuration**: Customize your translation file paths and define the default language in your project’s settings.
+- **Search Keys and Values**: Search for keys or values that contain a specific string.
 
 ## How to Use
 
@@ -73,7 +74,7 @@
 - [ ] Sync missing translations ensure consistency across languages.
 - [ ] AI-based contextual translation suggestions. It analyzes code context to give more accurate translations.
 - [ ] Display inline hover editor for translation keys in code.
-- [ ] Search for keys or values that contain a specific string.
+- [x] Search for keys or values that contain a specific string.
 - [ ] Auto-merge similar keys to reduce redundancy.
 - [ ] Suggest existing keys for reuse when adding new ones.
 - [ ] Rename keys and update references in code automatically.
