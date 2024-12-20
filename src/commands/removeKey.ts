@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
+import { updateEditorKey } from '../utils/editorUtils';
 
 async function removeKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -52,31 +53,11 @@ async function removeKeyCommand(): Promise<void> {
 	}
 
 	// Update key in editor
-	await editor.edit((editBuilder) => {
-		const keys = keyPath.split('.');
-		const text = editor.document.getText(editor.selection.isEmpty ? editor.document.lineAt(editor.selection.active).range : editor.selection);
+	const keys = keyPath.split('.');
+	keys.pop();
+	let newKeyPath = keys.length > 1 ? keys.join('.') : keys[0];
 
-		// Detect the start and end quotes and replace them with the new key inside the same quotes
-		const regex = new RegExp(`(['"])(${keyPath.replace(/^['"]|['"]$/g, '')})(['"])`, 'g');
-
-		// Preserve the quotes around the key
-		const updatedText = text.replace(regex, (match, startQuote, oldKey, endQuote) => {
-			if (keys.length === 1) {
-				return `${startQuote}${endQuote}`;
-			} else {
-				const path = keys.slice(0, -1).join('.');
-				const newFullKey = `${path}`;
-				return `${startQuote}${newFullKey}${endQuote}`;
-			}
-		});
-
-		if (editor.selection.isEmpty) {
-			const lineRange = editor.document.lineAt(editor.selection.active).range;
-			editBuilder.replace(lineRange, updatedText);
-		} else {
-			editBuilder.replace(editor.selection, updatedText);
-		}
-	});
+	await updateEditorKey(editor, keyPath, newKeyPath);
 }
 
 export { removeKeyCommand };

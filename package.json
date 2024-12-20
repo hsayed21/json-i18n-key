@@ -155,6 +155,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable auto-detection of i18n translation files within the project."
+        },
+        "json-i18n-key.suggestExistingKeys": {
+          "type": "boolean",
+          "description": "Suggest existing keys for reuse when adding new ones.",
+          "default": false
         }
       }
     },

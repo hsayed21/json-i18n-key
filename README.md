@@ -15,6 +15,7 @@
 - **Copilot AI Auto-Translate**: Automatically generate translation suggestions for new keys using GitHub Copilot AI, enhancing the translation workflow.
 - **Translation Path Configuration**: Customize your translation file paths and define the default language in your project’s settings.
 - **Search Keys and Values**: Search for keys or values that contain a specific string.
+- **Suggest Existing Keys for Reuse**: When adding a new translation key, the extension will suggest existing keys for reuse to avoid redundancy.
 
 ## How to Use
 
@@ -76,7 +77,7 @@
 - [ ] Display inline hover editor for translation keys in code.
 - [x] Search for keys or values that contain a specific string.
 - [ ] Auto-merge similar keys to reduce redundancy.
-- [ ] Suggest existing keys for reuse when adding new ones.
+- [x] Suggest existing keys for reuse when adding new ones.
 - [ ] Rename keys and update references in code automatically.
 - [ ] Detect and clean up unused translation keys automatically.
 

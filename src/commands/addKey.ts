@@ -5,6 +5,8 @@ import { getTranslationFromCopilot } from '../utils/translationUtils';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { convertCase } from '../utils/globalUtils';
 import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
+import { loadKeys } from '../utils/jsonUtils';
+import { updateEditorKey } from '../utils/editorUtils';
 
 async function addKeyCommand(): Promise<void> {
     const editor = vscode.window.activeTextEditor;
@@ -14,13 +16,14 @@ async function addKeyCommand(): Promise<void> {
 
     await autoDetectI18nFiles()
 
-    let keyPath = undefined;
+    let keyPath: string | undefined = undefined;
+    let originalKeyPath: string | undefined = undefined;
     const settings = JsonI18nKeySettings.instance;
     if (settings.translationFiles.length === 0) {
         vscode.window.showErrorMessage('No translation files found');
         return;
     }
-    
+
     if (settings.typeOfGetKey === 'Manual') {
         keyPath = await vscode.window.showInputBox({ prompt: 'Enter Key Path:' });
     } else if (settings.typeOfGetKey === 'Clipboard') {
@@ -43,6 +46,52 @@ async function addKeyCommand(): Promise<void> {
     if (!keyPath) {
         vscode.window.showErrorMessage('Key Path is required');
         return;
+    }
+
+    originalKeyPath = keyPath;
+
+    if (JsonI18nKeySettings.instance.suggestExistingKeys) {
+        const existingKeys = loadKeys(convertCase(keyPath.split('.').pop() as string));
+        keyPath = await new Promise<string>((resolve) => {
+            const quickPick = vscode.window.createQuickPick();
+            quickPick.items = [
+                { label: '$(close) None', description: 'Continue without selecting existing key' },
+                ...existingKeys.map(key => ({ label: key }))
+            ];
+            quickPick.placeholder = 'Select an existing key or none to continue';
+
+            quickPick.onDidAccept(() => {
+                const selectedItem = quickPick.selectedItems[0];
+                let selectedKey = selectedItem?.label;
+
+                // If "None" is selected, use the original key
+                if (selectedKey === '$(close) None') {
+                    selectedKey = originalKeyPath;
+                } else {
+                    selectedKey = selectedKey || quickPick.value;
+                }
+
+                quickPick.hide();
+                resolve(selectedKey ?? keyPath ?? '');
+            });
+
+            quickPick.onDidHide(() => {
+                resolve(keyPath ?? '');
+                quickPick.dispose();
+            });
+
+            quickPick.show();
+        });
+
+        if (!keyPath) {
+            return;
+        }
+
+        // If selected key exists in the list, only update editor
+        if (existingKeys.includes(keyPath)) {
+            await updateEditorKey(editor, originalKeyPath, keyPath);
+            return;
+        }
     }
 
     const keys = keyPath.split('.');
@@ -78,31 +127,7 @@ async function addKeyCommand(): Promise<void> {
     }
 
     // Update key in editor
-	await editor.edit((editBuilder) => {
-		const keys = keyPath.split('.');
-		const text = editor.document.getText(editor.selection.isEmpty ? editor.document.lineAt(editor.selection.active).range : editor.selection);
-
-		// Detect the start and end quotes and replace them with the new key inside the same quotes
-		const regex = new RegExp(`(['"])(${keyPath.replace(/^['"]|['"]$/g, '')})(['"])`, 'g');
-
-		// Preserve the quotes around the key
-		const updatedText = text.replace(regex, (match, startQuote, oldKey, endQuote) => {
-			if (keys.length === 1) {
-				return `${startQuote}${key}${endQuote}`;
-			} else {
-				const path = keys.slice(0, -1).join('.');
-				const newFullKey = `${path}.${key}`;
-				return `${startQuote}${newFullKey}${endQuote}`;
-			}
-		});
-
-		if (editor.selection.isEmpty) {
-			const lineRange = editor.document.lineAt(editor.selection.active).range;
-			editBuilder.replace(lineRange, updatedText);
-		} else {
-			editBuilder.replace(editor.selection, updatedText);
-		}
-	});
+    await updateEditorKey(editor, originalKeyPath ?? keyPath, keyPath);
 }
 
 export { addKeyCommand };

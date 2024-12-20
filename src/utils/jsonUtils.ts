@@ -97,13 +97,17 @@ export function isJsonObject(obj: unknown): obj is JsonObject {
 	return obj !== null && typeof obj === 'object';
 }
 
-export function loadKeys() {
+export function loadKeys(key: string | null = null) {
 	if (JsonI18nKeySettings.instance.enJsonFilePath === '') {
 		printChannelOutput('English translation file not found');
 		return [];
 	}
-
-	return flattenKeys(loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath));
+	
+	var keys =  flattenKeys(loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath));
+	if (key === null)
+		return keys;
+	else
+		return keys.filter(k => k.toLowerCase().endsWith(key.toLowerCase()));
 }
 
 export function flattenKeys(obj: any, prefix = ''): string[] {

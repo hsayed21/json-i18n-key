@@ -11,6 +11,7 @@ export class JsonI18nKeySettings {
 	overrideKeyIfExistsWhenAdding: boolean;
 	overrideKeyIfExistsWhenUpdating: boolean;
 	autoDetectTranslations: boolean;
+	suggestExistingKeys: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' |'snake_case' | 'kebab-case';
 
 	private constructor() {
@@ -22,6 +23,7 @@ export class JsonI18nKeySettings {
 			this.overrideKeyIfExistsWhenAdding = settings.overrideKeyIfExistsWhenAdding;
 			this.overrideKeyIfExistsWhenUpdating = settings.overrideKeyIfExistsWhenUpdating;
 			this.autoDetectTranslations = settings.autoDetectTranslations;
+			this.suggestExistingKeys = settings.suggestExistingKeys;
 			this.keyFormat = settings.keyFormat;
 		  this.enJsonFilePath = settings.translationFiles.find(file => file.lang === 'en' && file.isDefault == true)?.filePath || '';
 	}
@@ -54,6 +56,7 @@ interface Settings {
 	overrideKeyIfExistsWhenAdding: boolean;
 	overrideKeyIfExistsWhenUpdating: boolean;
 	autoDetectTranslations: boolean;
+	suggestExistingKeys: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' | 'snake_case' | 'kebab-case';
 }
 
