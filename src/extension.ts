@@ -8,6 +8,7 @@ import { updateKeyCommand } from './commands/updateKey';
 import { findKeyCommand } from './commands/findKey';
 import { addKeyCommand } from './commands/addKey';
 import { checkExistKeyCommand } from './commands/checkKey';
+import { cleanupUnusedKeys } from './commands/cleanupUnusedKeys';
 
 let outputChannel: vscode.OutputChannel | undefined;
 let keyCache: string[] = [];
@@ -111,6 +112,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.updateKey', updateKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.searchKey', searchKeyCommand),
+		vscode.commands.registerCommand('json-i18n-key.cleanupUnusedKeys', cleanupUnusedKeys),
 		hoverProvider,
 		completionProvider,
 		watcher,

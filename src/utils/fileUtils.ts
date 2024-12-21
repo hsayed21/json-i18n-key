@@ -8,7 +8,7 @@ export function loadJsonFileSync(filePath: string, preserveFormatting: boolean =
 
 	if (!fs.existsSync(filePath)) {
 		vscode.window.showErrorMessage(`File does not exist: ${filePath}`);
-		return;
+		return null;
 	}
 
 	const content = fs.readFileSync(filePath, 'utf8');

@@ -13,6 +13,8 @@ export class JsonI18nKeySettings {
 	autoDetectTranslations: boolean;
 	suggestExistingKeys: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' |'snake_case' | 'kebab-case';
+	scanFilePatterns: string[];
+	excludePatterns: string[];
 
 	private constructor() {
 			const settings = vscode.workspace.getConfiguration('json-i18n-key') as unknown as Settings;
@@ -26,6 +28,8 @@ export class JsonI18nKeySettings {
 			this.suggestExistingKeys = settings.suggestExistingKeys;
 			this.keyFormat = settings.keyFormat;
 		  this.enJsonFilePath = settings.translationFiles.find(file => file.lang === 'en' && file.isDefault == true)?.filePath || '';
+			this.scanFilePatterns = settings.scanFilePatterns || [];
+			this.excludePatterns = settings.excludePatterns || [];
 	}
 
 	static get instance(): JsonI18nKeySettings {
@@ -48,7 +52,7 @@ export class JsonI18nKeySettings {
 	}
 }
 
-interface Settings {
+export interface Settings {
 	translationFiles: TranslationFile[];
 	typeOfGetKey: 'Selection' | 'Clipboard' | 'Manual';
 	enableCopilotTranslation: boolean;
@@ -58,9 +62,11 @@ interface Settings {
 	autoDetectTranslations: boolean;
 	suggestExistingKeys: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' | 'snake_case' | 'kebab-case';
+	scanFilePatterns: string[];
+	excludePatterns: string[];
 }
 
-interface TranslationFile {
+export interface TranslationFile {
 	lang: string;
 	filePath: string;
 	isDefault: boolean;

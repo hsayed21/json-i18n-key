@@ -34,6 +34,18 @@ export function getKeysValues(keyPath: string): string[] {
 	return result;
 }
 
+export function GetAlli18nFilesKeys(): string[] {
+	const uniqueKeys = new Set<string>();
+	JsonI18nKeySettings.instance.translationFiles.forEach(file => {
+		const jsonData = loadJsonFileSync(file.filePath);
+		if (jsonData !== null) {
+			const keys = flattenKeys(jsonData);
+			keys.forEach(key => uniqueKeys.add(key));
+		}
+	});
+	return Array.from(uniqueKeys);
+}
+
 export function getHoverTranslation(keyPath: string): vscode.MarkdownString {
 	const hoverMessage = new vscode.MarkdownString();
 	hoverMessage.appendMarkdown(`**Key:** \`${keyPath}\`\n\n`);
@@ -132,5 +144,29 @@ export function flattenKeysWithValues(obj: any, prefix = ''): { key: string, val
 		}
 		return acc;
 	}, [] as { key: string, value: any }[]);
+}
+
+export function removeKeyInObject(obj: any, path: string): boolean {
+	const parts = path.split('.');
+	const last = parts.pop()!;
+	let current = obj;
+
+	for (const part of parts) {
+			if (!current[part] || typeof current[part] !== 'object') {
+					return false;
+			}
+			current = current[part];
+	}
+
+	if (last in current) {
+			delete current[last];
+			// Check if the parent object has no other children
+			if (Object.keys(current).length === 0) {
+					return removeKeyInObject(obj, parts.join('.'));
+			}
+			return true;
+	}
+
+	return false;
 }
 

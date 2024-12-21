@@ -52,6 +52,11 @@
         "command": "json-i18n-key.searchKey",
         "title": "Search Translation Key",
         "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.cleanupUnusedKeys",
+        "title": "Cleanup Unused Translation Keys",
+        "category": "Json I18n Key"
       }
     ],
     "configuration": {
@@ -160,6 +165,22 @@
           "type": "boolean",
           "description": "Suggest existing keys for reuse when adding new ones.",
           "default": false
+        },
+        "json-i18n-key.scanFilePatterns": {
+          "type": "array",
+          "description": "File patterns to scan for translation key usage",
+          "default": ["**/*.{ts,js,tsx,jsx,vue,html}"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "json-i18n-key.excludePatterns": {
+          "type": "array",
+          "description": "Patterns to exclude from scanning",
+          "default": ["**/node_modules/**", "**/dist/**"],
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
