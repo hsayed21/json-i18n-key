@@ -4,7 +4,7 @@
   "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
   "author": "Hamada Sayed",
   "publisher": "hsayed",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -169,7 +169,9 @@
         "json-i18n-key.scanFilePatterns": {
           "type": "array",
           "description": "File patterns to scan for translation key usage",
-          "default": ["**/*.{ts,js,tsx,jsx,vue,html}"],
+          "default": [
+            "**/*.{ts,js,tsx,jsx,vue,html}"
+          ],
           "items": {
             "type": "string"
           }
@@ -177,7 +179,10 @@
         "json-i18n-key.excludePatterns": {
           "type": "array",
           "description": "Patterns to exclude from scanning",
-          "default": ["**/node_modules/**", "**/dist/**"],
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**"
+          ],
           "items": {
             "type": "string"
           }
