@@ -17,6 +17,7 @@
 - **Search Keys and Values**: Search for keys or values that contain a specific string.
 - **Suggest Existing Keys for Reuse**: When adding a new translation key, the extension will suggest existing keys for reuse to avoid redundancy.
 - **Cleanup Unused Translation Keys**: Detect and clean up unused translation keys automatically.
+- **Diagnostics and Quick Fixes**: Automatically detect missing translation keys in your code and provide quick fixes to add them.
 
 ## How to Use
 
@@ -67,9 +68,8 @@
 	- [ ] Allow fallback behavior if the preferred API fails.
 - [x] Custom key formats when created or renamed allow options like PascalCase, snake_case, camelCase, kebab-case.
 - [ ] Statusbar action copy full translation path.
-- [ ] Visual highlights underline missing translations and color-code keys.
 - [x] Key validation warn users of duplicate keys when added or updated.
-- [ ] Diagnostics check translation files for issues and suggest quick fixes.
+- [x] Diagnostics check translation files for issues and suggest quick fixes.
 - [x] Option Auto-detect i18n translation files within a project.
 - [x] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
 - [ ] Sync missing translations ensure consistency across languages.

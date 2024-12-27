@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonI18nKeySettings } from './models/JsonI18nKeySettings';
-import { getHoverTranslation, loadKeys } from './utils/jsonUtils';
+import { GetAlli18nFilesKeys, getHoverTranslation } from './utils/jsonUtils';
 import { removeKeyCommand } from './commands/removeKey';
 import { renameKeyCommand } from './commands/renameKey';
 import { searchKeyCommand } from './commands/searchKey';
@@ -9,10 +9,13 @@ import { findKeyCommand } from './commands/findKey';
 import { addKeyCommand } from './commands/addKey';
 import { checkExistKeyCommand } from './commands/checkKey';
 import { cleanupUnusedKeys } from './commands/cleanupUnusedKeys';
+import { KEY_PATH_REGEX, SUPPORTED_LANGUAGES } from './utils/constants';
+import { DiagnosticManager } from './utils/diagnosticManager';
 import path from 'path';
 
 let outputChannel: vscode.OutputChannel | undefined;
-let keyCache: string[] = [];
+let keyCache: Set<string> = new Set();
+let diagnosticManager: DiagnosticManager;
 
 /**
  * This method is called when the extension is activated.
@@ -24,10 +27,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	// Register hover provider for multiple languages
 	const hoverProvider = vscode.languages.registerHoverProvider(
-		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
+		SUPPORTED_LANGUAGES,
 		{
 			async provideHover(document, position, token) {
-				const range = document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
+				const range = document.getWordRangeAtPosition(position, KEY_PATH_REGEX);
 				if (!range) {
 					return;
 				}
@@ -45,10 +48,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	// Register completion provider for multiple languages
 	const completionProvider = vscode.languages.registerCompletionItemProvider(
-		['json', 'ts', 'js', 'html', 'typescript', 'javascript'],
+		SUPPORTED_LANGUAGES,
 		{
 			async provideCompletionItems(document, position, token, context) {
-				const range = document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
+				const range = document.getWordRangeAtPosition(position, KEY_PATH_REGEX);
 				if (!range) {
 					return;
 				}
@@ -62,7 +65,7 @@ export function activate(context: vscode.ExtensionContext): void {
 				fullKeyPath = fullKeyPath.replace(/^['"]|['"]$/g, '');
 
 				const uniqueKeys = Array.from(
-					new Set( keyCache
+					new Set( Array.from(keyCache)
 									.filter(key => key.startsWith(fullKeyPath))
 									.map((key: string) => {
 											const str = key.slice(fullKeyPath.lastIndexOf('.') + 1, key.length);
@@ -85,10 +88,21 @@ export function activate(context: vscode.ExtensionContext): void {
 		'.' // Trigger on `.`
 	);
 
+	// Register event listeners for diagnostics
+	vscode.workspace.onDidOpenTextDocument(doc => diagnosticManager.updateDiagnostics(doc));
+	vscode.workspace.onDidChangeTextDocument(editor => diagnosticManager.updateDiagnostics(editor.document));
+	// vscode.workspace.onDidSaveTextDocument(doc => diagnosticManager.updateDiagnostics(doc));
+	vscode.window.onDidChangeActiveTextEditor(editor => diagnosticManager.updateDiagnostics(editor!.document));
+	vscode.window.onDidChangeVisibleTextEditors(editors =>  editors.forEach(editor => diagnosticManager.updateDiagnostics(editor.document)));
+	
 	// Set up file watcher
 	const watcher = setupFileWatcher();
 
-	keyCache = loadKeys();
+	keyCache = new Set(GetAlli18nFilesKeys());
+
+	diagnosticManager = new DiagnosticManager(keyCache);
+	// Initial diagnostics update
+	diagnosticManager.updateAllDiagnostics();
 
 	// Register commands and other providers
 	context.subscriptions.push(
@@ -102,7 +116,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.cleanupUnusedKeys', cleanupUnusedKeys),
 		hoverProvider,
 		completionProvider,
-		watcher!
+		watcher!,
 	);
 }
 
@@ -125,7 +139,8 @@ function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
 
 			watcher.onDidChange(() => {
 					try {
-							keyCache = loadKeys();
+							keyCache = new Set(GetAlli18nFilesKeys());
+							diagnosticManager.updateKeys(keyCache);
 					} catch (error) {
 							printChannelOutput(`Error reloading keys: ${error}`, true);
 					}
@@ -133,14 +148,16 @@ function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
 
 			watcher.onDidCreate(() => {
 					try {
-							keyCache = loadKeys();
+						keyCache = new Set(GetAlli18nFilesKeys());
+						diagnosticManager.updateKeys(keyCache);
 					} catch (error) {
 							printChannelOutput(`Error loading keys: ${error}`, true);
 					}
 			});
 
 			watcher.onDidDelete(() => {
-					keyCache = [];
+					keyCache.clear();
+					diagnosticManager.updateKeys(keyCache);
 					printChannelOutput('Cleared key cache due to file deletion.');
 			});
 
@@ -171,5 +188,7 @@ export function printChannelOutput(content: any, reveal: boolean = false): void 
 
 // This method is called when your extension is deactivated
 export function deactivate(): void {
-	// Cleanup any resources if necessary
+    if (diagnosticManager) {
+        diagnosticManager.dispose();
+    }
 }

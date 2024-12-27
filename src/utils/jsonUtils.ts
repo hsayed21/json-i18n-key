@@ -34,7 +34,7 @@ export function getKeysValues(keyPath: string): string[] {
 	return result;
 }
 
-export function GetAlli18nFilesKeys(): string[] {
+export function GetAlli18nFilesKeys(key: string | null = null): string[] {
 	const uniqueKeys = new Set<string>();
 	JsonI18nKeySettings.instance.translationFiles.forEach(file => {
 		const jsonData = loadJsonFileSync(file.filePath);
@@ -43,7 +43,11 @@ export function GetAlli18nFilesKeys(): string[] {
 			keys.forEach(key => uniqueKeys.add(key));
 		}
 	});
-	return Array.from(uniqueKeys);
+
+	if (key === null)
+		return Array.from(uniqueKeys);
+	else
+		return Array.from(uniqueKeys).filter(k => k.toLowerCase().endsWith(key.toLowerCase()));
 }
 
 export function getHoverTranslation(keyPath: string): vscode.MarkdownString {
