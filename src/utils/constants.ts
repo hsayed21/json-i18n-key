@@ -1,4 +1,4 @@
-export const KEY_PATH_REGEX = /['"](.*?)['"]/;
+export const KEY_PATH_REGEX = /(['"`])([^\s'"`\\](?:[^\s'"`\\]|\\.)*?)\1/;
 export const DIAGNOSTIC_KEY_PATH_REGEX = /['"]([a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)+)['"]/g;
 export const SUPPORTED_LANGUAGES = ['ts', 'js', 'html', 'typescript', 'javascript'];
 export const DEBOUNCE_DELAY = 250; // milliseconds

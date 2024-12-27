@@ -3,6 +3,8 @@ import { JsonParser } from '../utils/json-parser';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { updateEditorKey } from '../utils/editorUtils';
+import { KEY_PATH_REGEX } from '../utils/constants';
+import { printChannelOutput } from '../extension';
 
 async function removeKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -26,20 +28,22 @@ async function removeKeyCommand(): Promise<void> {
 		keyPath = clipboard;
 	} else {
 		const position = editor.selection.active;
-		const range = editor.document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
+		const range = editor.document.getWordRangeAtPosition(position, KEY_PATH_REGEX);
 		if (range) {
 			keyPath = editor.document.getText(range);
-			keyPath = keyPath.replace(/^['"]|['"]$/g, '');
-		} else {
-			keyPath = editor.document.getText(editor.selection);
+			keyPath = keyPath.replace(/^['"`]|['"`]$/g, '');
+		}
+		else {
+			vscode.window.showErrorMessage("Can't get key path by regex");
+			return;
 		}
 	}
 
 	if (keyPath === undefined)
 		return;
 
-	if (!keyPath) {
-		vscode.window.showErrorMessage('Key path is required');
+	if (!keyPath || keyPath.includes(' ')) {
+		vscode.window.showErrorMessage('Key path is required and cannot contain spaces');
 		return;
 	}
 
