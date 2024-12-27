@@ -9,6 +9,7 @@ import { findKeyCommand } from './commands/findKey';
 import { addKeyCommand } from './commands/addKey';
 import { checkExistKeyCommand } from './commands/checkKey';
 import { cleanupUnusedKeys } from './commands/cleanupUnusedKeys';
+import path from 'path';
 
 let outputChannel: vscode.OutputChannel | undefined;
 let keyCache: string[] = [];
@@ -84,23 +85,9 @@ export function activate(context: vscode.ExtensionContext): void {
 		'.' // Trigger on `.`
 	);
 
+	// Set up file watcher
+	const watcher = setupFileWatcher();
 
-	// Set up file watcher for en.json
-	const watcher = vscode.workspace.createFileSystemWatcher(JsonI18nKeySettings.instance.enJsonFilePath);
-	watcher.onDidChange(() => {
-			console.log('en.json changed, reloading keys...');
-			keyCache = loadKeys();
-	});
-	watcher.onDidCreate(() => {
-			console.log('en.json created, loading keys...');
-			keyCache = loadKeys();
-	});
-	watcher.onDidDelete(() => {
-			console.log('en.json deleted, clearing cache...');
-			keyCache = [];
-	});
-
-	// Load keys initially
 	keyCache = loadKeys();
 
 	// Register commands and other providers
@@ -115,8 +102,53 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.cleanupUnusedKeys', cleanupUnusedKeys),
 		hoverProvider,
 		completionProvider,
-		watcher,
+		watcher!
 	);
+}
+
+/**
+ * Sets up the file watcher for the JSON translation file
+ * @returns The configured FileSystemWatcher or undefined if setup fails
+ */
+function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
+	try {
+			if (!JsonI18nKeySettings.instance.enJsonFilePath) {
+					throw new Error('JSON file path is not configured in settings');
+			}
+
+			const directory = path.dirname(JsonI18nKeySettings.instance.enJsonFilePath);
+			const fileName = path.basename(JsonI18nKeySettings.instance.enJsonFilePath);
+
+			const watcher = vscode.workspace.createFileSystemWatcher(
+					new vscode.RelativePattern(vscode.Uri.file(directory), fileName)
+			);
+
+			watcher.onDidChange(() => {
+					try {
+							keyCache = loadKeys();
+					} catch (error) {
+							printChannelOutput(`Error reloading keys: ${error}`, true);
+					}
+			});
+
+			watcher.onDidCreate(() => {
+					try {
+							keyCache = loadKeys();
+					} catch (error) {
+							printChannelOutput(`Error loading keys: ${error}`, true);
+					}
+			});
+
+			watcher.onDidDelete(() => {
+					keyCache = [];
+					printChannelOutput('Cleared key cache due to file deletion.');
+			});
+
+			return watcher;
+	} catch (error) {
+			printChannelOutput(`Error setting up file watcher: ${error}`, true);
+			return undefined;
+	}
 }
 
 /**
