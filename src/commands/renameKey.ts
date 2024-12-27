@@ -5,6 +5,7 @@ import { convertCase } from '../utils/globalUtils';
 import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { updateEditorKey } from '../utils/editorUtils';
 import { KEY_PATH_REGEX } from '../utils/constants';
+import { findAndReplaceInFiles } from '../utils/fileUtils';
 
 export async function renameKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -76,4 +77,16 @@ export async function renameKeyCommand(): Promise<void> {
 
 	// Update key in editor
 	await updateEditorKey(editor, keyPath, newFullKey);
+
+	if (settings.updateReferencesOnRename) {
+		try {
+			const replacedCount = await findAndReplaceInFiles(keyPath, newFullKey);
+
+			if (replacedCount > 0) {
+				vscode.window.showInformationMessage(`Updated ${replacedCount} references from "${keyPath}" to "${newFullKey}"`);
+			}
+		} catch (error) {
+			vscode.window.showErrorMessage(`Failed to update references: ${error}`);
+		}
+	}
 }

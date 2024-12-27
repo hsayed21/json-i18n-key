@@ -191,6 +191,11 @@
           "items": {
             "type": "string"
           }
+        },
+        "json-i18n-key.updateReferencesOnRename": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically update key references in code when renaming translation keys"
         }
       }
     },

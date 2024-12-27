@@ -19,6 +19,7 @@
 - **Cleanup Unused Translation Keys**: Detect and clean up unused translation keys automatically.
 - **Diagnostics and Quick Fixes**: Automatically detect missing translation keys in your code and provide quick fixes to add them.
 - **Copy Existing Translation Key**: Copy values from existing translation keys to new or updated keys, ensuring consistency and saving time.
+- **Auto Reference Updates**: Automatically updates all references to translation keys when renamed.
 
 ## How to Use
 
@@ -79,7 +80,7 @@
 - [x] Search for keys or values that contain a specific string.
 - [ ] Auto-merge similar keys to reduce redundancy.
 - [x] Suggest existing keys for reuse when adding new ones.
-- [ ] Rename keys and update references in code automatically.
+- [x] Rename keys and update references in code automatically.
 - [x] Detect and clean up unused translation keys automatically.
 - [x] Copy values from existing translation keys to new or updated keys.
 
