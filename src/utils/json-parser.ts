@@ -107,11 +107,11 @@ export class JsonParser {
         vscode.window.showInformationMessage(`${key}: Key updated in '${this.fileName}'`);
     }
 
-    addKey(keyPath: string, value: string) {
+    addKey(keyPath: string, value: string, overrideForCopy: boolean = false) {
         const jsonData = loadJsonFileSync(this.jsonFilePath, this.preserveFormatting);
         const key = keyPath.split('.').pop() as string;
 
-        if (!JsonI18nKeySettings.instance.overrideKeyIfExistsWhenAdding && checkExistKey(this.jsonFilePath, keyPath)) {
+        if (!JsonI18nKeySettings.instance.overrideKeyIfExistsWhenAdding && checkExistKey(this.jsonFilePath, keyPath) && !overrideForCopy) {
             vscode.window.showErrorMessage(`${key}: Key already exists in ${this.fileName}`);
             return;
         }

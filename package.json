@@ -57,6 +57,11 @@
         "command": "json-i18n-key.cleanupUnusedKeys",
         "title": "Cleanup Unused Translation Keys",
         "category": "Json I18n Key"
+      },
+      {
+        "command": "json-i18n-key.copyKey",
+        "title": "Copy Translation Key",
+        "category": "Json I18n Key"
       }
     ],
     "configuration": {

@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 import { loadJsonFileSync } from './fileUtils';
 import { JSONPath } from 'jsonpath-plus';
 import { printChannelOutput } from '../extension';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function checkExistKey(jsonFilePath: string, keyPath: string): boolean {
 	const jsonData = loadJsonFileSync(jsonFilePath, false);
@@ -33,6 +35,30 @@ export function getKeysValues(keyPath: string): string[] {
 
 	return result;
 }
+
+
+export function getKeyValuesFromAllFiles(keyPath: string): { filePath: string, lang: string, value: string }[] {
+	const results: {filePath: string, lang: string, value: string }[] = [];
+	
+	JsonI18nKeySettings.instance.translationFiles.forEach(file => {
+			const jsonData = loadJsonFileSync(file.filePath);
+			if (jsonData !== null) {
+					const value = JSONPath({ 
+							json: jsonData, 
+							path: keyPath 
+					});
+					
+					results.push({
+							filePath: file.filePath,
+							lang: file.lang,
+							value: value.length > 0 ? value[0] : ''
+					});
+			}
+	});
+
+	return results;
+}
+
 
 export function GetAlli18nFilesKeys(key: string | null = null): string[] {
 	const uniqueKeys = new Set<string>();

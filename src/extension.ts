@@ -12,6 +12,7 @@ import { cleanupUnusedKeys } from './commands/cleanupUnusedKeys';
 import { KEY_PATH_REGEX, SUPPORTED_LANGUAGES } from './utils/constants';
 import { DiagnosticManager } from './utils/diagnosticManager';
 import path from 'path';
+import { copyKeyCommand } from './commands/copyKey';
 
 let outputChannel: vscode.OutputChannel | undefined;
 let keyCache: Set<string> = new Set();
@@ -114,6 +115,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.commands.registerCommand('json-i18n-key.addKey', addKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.searchKey', searchKeyCommand),
 		vscode.commands.registerCommand('json-i18n-key.cleanupUnusedKeys', cleanupUnusedKeys),
+		vscode.commands.registerCommand('json-i18n-key.copyKey', copyKeyCommand),
 		hoverProvider,
 		completionProvider,
 		watcher!,

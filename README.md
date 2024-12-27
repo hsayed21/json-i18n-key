@@ -18,6 +18,7 @@
 - **Suggest Existing Keys for Reuse**: When adding a new translation key, the extension will suggest existing keys for reuse to avoid redundancy.
 - **Cleanup Unused Translation Keys**: Detect and clean up unused translation keys automatically.
 - **Diagnostics and Quick Fixes**: Automatically detect missing translation keys in your code and provide quick fixes to add them.
+- **Copy Existing Translation Key**: Copy values from existing translation keys to new or updated keys, ensuring consistency and saving time.
 
 ## How to Use
 
@@ -80,6 +81,7 @@
 - [x] Suggest existing keys for reuse when adding new ones.
 - [ ] Rename keys and update references in code automatically.
 - [x] Detect and clean up unused translation keys automatically.
+- [x] Copy values from existing translation keys to new or updated keys.
 
 ## Contributing
 
