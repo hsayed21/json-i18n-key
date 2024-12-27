@@ -4,8 +4,9 @@ import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { convertCase } from '../utils/globalUtils';
 import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { updateEditorKey } from '../utils/editorUtils';
+import { KEY_PATH_REGEX } from '../utils/constants';
 
-async function renameKeyCommand(): Promise<void> {
+export async function renameKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
 	if (!editor) {
 		return; // No open text editor
@@ -28,21 +29,27 @@ async function renameKeyCommand(): Promise<void> {
 		keyPath = clipboard;
 	} else {
 		const position = editor.selection.active;
-		const range = editor.document.getWordRangeAtPosition(position, /['"](.*?)['"]/);
+		const range = editor.document.getWordRangeAtPosition(position, KEY_PATH_REGEX);
 		if (range) {
 			keyPath = editor.document.getText(range);
-			keyPath = keyPath.replace(/^['"]|['"]$/g, '');
+			keyPath = keyPath.replace(/^['"`]|['"`]$/g, '');
+
+			if (keyPath.includes(' ')) {
+        vscode.window.showErrorMessage('Key path cannot contain spaces');
+        return;
+			}
 		} else {
-			keyPath = editor.document.getText(editor.selection);
+			vscode.window.showErrorMessage("Can't get key path by regex");
+			return;
 		}
 	}
 
 	if (keyPath === undefined)
 		return;
 
-	if (!keyPath) {
-		vscode.window.showErrorMessage('Key path is required');
-		return;
+	if (!keyPath || keyPath.includes(' ')) {
+    vscode.window.showErrorMessage('Key path is required and cannot contain spaces');
+    return;
 	}
 
 	newKey = await vscode.window.showInputBox({ prompt: 'Enter new Key:' });
@@ -70,5 +77,3 @@ async function renameKeyCommand(): Promise<void> {
 	// Update key in editor
 	await updateEditorKey(editor, keyPath, newFullKey);
 }
-
-export { renameKeyCommand };
