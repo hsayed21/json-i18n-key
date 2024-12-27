@@ -4,7 +4,7 @@
   "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
   "author": "Hamada Sayed",
   "publisher": "hsayed",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -196,8 +196,14 @@
     },
     "capabilities": {
       "codeActionProvider": {
-        "languages": ["typescript", "javascript", "html"],
-        "actions": ["quickfix"]
+        "languages": [
+          "typescript",
+          "javascript",
+          "html"
+        ],
+        "actions": [
+          "quickfix"
+        ]
       }
     },
     "keybindings": [
