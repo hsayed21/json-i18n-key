@@ -13,7 +13,26 @@ async function getTranslationFromCopilot(text: string, lang: string): Promise<st
 	}
 
 	const messages: vscode.LanguageModelChatMessage[] = [
-		vscode.LanguageModelChatMessage.User(`Translate the text "${text}" to ${lang}. Provide ONLY the translated text with no additional explanation, code blocks, or formatting. Return the translation as plain text.`),
+		// vscode.LanguageModelChatMessage.User(`Translate the text "${text}" to ${lang}. Provide ONLY the translated text with no additional explanation, code blocks, or formatting. Return the translation as plain text.`),
+		vscode.LanguageModelChatMessage.User(
+			`Translate the text "${text}" to ${lang}, considering software development context and terminology. 
+			Rules:
+				- Use definite articles when appropriate (e.g., "the branch" not just "branch").
+				- Maintain technical term consistency and avoid unnecessary literal translations.
+				- Consider the context and follow conventional usage in software development.
+				- Follow target language grammar rules
+				- Use industry-standard translations for software-specific terminology.
+			Context Rules:
+				- Prioritize semantic meaning over literal translation.
+				- Use standard programming terminology widely recognized in the target language.
+				- Follow the target language's technical conventions and coding standards.
+				- Ensure descriptive and meaningful translations for keys.
+			Naming Convention Priorities:
+				- Clarity and readability.
+				- Consistency with the existing codebase or files (e.g., en.json, ar.json).
+
+			Provide ONLY the translated text with no additional explanation, code blocks, or formatting. Return the translation as plain text.`
+		),
 	];
 
 	// Sending the prompt

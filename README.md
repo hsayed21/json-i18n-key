@@ -75,7 +75,6 @@
 - [x] Option Auto-detect i18n translation files within a project.
 - [x] Maintain original JSON formatting (spaces, indentation) to avoid unnecessary git diffs.
 - [ ] Sync missing translations ensure consistency across languages.
-- [ ] AI-based contextual translation suggestions. It analyzes code context to give more accurate translations.
 - [ ] Display inline hover editor for translation keys in code.
 - [x] Search for keys or values that contain a specific string.
 - [ ] Auto-merge similar keys to reduce redundancy.
