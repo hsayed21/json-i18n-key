@@ -16,7 +16,7 @@
 - **Translation Path Configuration**: Customize your translation file paths and define the default language in your project’s settings.
 - **Search Keys and Values**: Search for keys or values that contain a specific string.
 - **Suggest Existing Keys for Reuse**: When adding a new translation key, the extension will suggest existing keys for reuse to avoid redundancy.
-- **Cleanup Unused Translation Keys**: Detect and clean up unused translation keys automatically.
+- **Cleanup Unused Translation Keys**: Detect and clean up unused translation keys.
 - **Diagnostics and Quick Fixes**: Automatically detect missing translation keys in your code and provide quick fixes to add them.
 - **Copy Existing Translation Key**: Copy values from existing translation keys to new or updated keys, ensuring consistency and saving time.
 - **Auto Reference Updates**: Automatically updates all references to translation keys when renamed.
@@ -80,7 +80,7 @@
 - [ ] Auto-merge similar keys to reduce redundancy.
 - [x] Suggest existing keys for reuse when adding new ones.
 - [x] Rename keys and update references in code automatically.
-- [x] Detect and clean up unused translation keys automatically.
+- [x] Detect and clean up unused translation keys.
 - [x] Copy values from existing translation keys to new or updated keys.
 
 ## Contributing

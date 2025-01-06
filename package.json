@@ -171,6 +171,11 @@
           "description": "Suggest existing keys for reuse when adding new ones.",
           "default": false
         },
+        "json-i18n-key.suggestSimilarKeysIfTheSameExist": {
+          "type": "boolean",
+          "description": "Suggest similar keys if the same key exists when adding new ones.",
+          "default": false
+        },
         "json-i18n-key.scanFilePatterns": {
           "type": "array",
           "description": "File patterns to scan for translation key usage",

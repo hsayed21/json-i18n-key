@@ -12,6 +12,7 @@ export class JsonI18nKeySettings {
 	overrideKeyIfExistsWhenUpdating: boolean;
 	autoDetectTranslations: boolean;
 	suggestExistingKeys: boolean;
+	suggestSimilarKeysIfTheSameExist: boolean;
 	updateReferencesOnRename: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' |'snake_case' | 'kebab-case';
 	scanFilePatterns: string[];
@@ -27,6 +28,7 @@ export class JsonI18nKeySettings {
 			this.overrideKeyIfExistsWhenUpdating = settings.overrideKeyIfExistsWhenUpdating;
 			this.autoDetectTranslations = settings.autoDetectTranslations;
 			this.suggestExistingKeys = settings.suggestExistingKeys;
+			this.suggestSimilarKeysIfTheSameExist = settings.suggestSimilarKeysIfTheSameExist;
 			this.updateReferencesOnRename = settings.updateReferencesOnRename;
 			this.keyFormat = settings.keyFormat;
 		  this.enJsonFilePath = settings.translationFiles.find(file => file.lang === 'en' && file.isDefault == true)?.filePath || '';
@@ -63,6 +65,7 @@ export interface Settings {
 	overrideKeyIfExistsWhenUpdating: boolean;
 	autoDetectTranslations: boolean;
 	suggestExistingKeys: boolean;
+	suggestSimilarKeysIfTheSameExist: boolean;
 	updateReferencesOnRename: boolean;
 	keyFormat: 'None' | 'PascalCase' | 'camelCase' | 'snake_case' | 'kebab-case';
 	scanFilePatterns: string[];
