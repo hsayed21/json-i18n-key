@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { SUPPORTED_LANGUAGES, DEBOUNCE_DELAY, DIAGNOSTIC_KEY_PATH_REGEX, DIAGNOSTIC_SEVERITY, DIAGNOSTIC_FIXES } from './constants';
 import debounce from './debounce';
+import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 
 export class DiagnosticManager {
     private readonly collection: vscode.DiagnosticCollection;
@@ -50,6 +51,11 @@ export class DiagnosticManager {
         return match ? match[1] : '';
     }
 
+    private hasValidConfiguration(): boolean {
+        const settings = JsonI18nKeySettings.instance;
+        return settings.translationFiles.length > 0 && settings.translationFiles.some(f => f.isDefault && f.filePath !== '');
+    }
+
     public dispose() {
         this.collection.dispose();
     }
@@ -67,7 +73,7 @@ export class DiagnosticManager {
     }
 
     private getDiagnostics(document: vscode.TextDocument): vscode.Diagnostic[] {
-        if (!SUPPORTED_LANGUAGES.includes(document.languageId)) {
+        if (!SUPPORTED_LANGUAGES.includes(document.languageId) || !this.hasValidConfiguration()) {
             return [];
         }
 
@@ -97,13 +103,19 @@ export class DiagnosticManager {
     }
 
     public readonly updateDiagnostics = debounce((document: vscode.TextDocument) => {
-        if (!SUPPORTED_LANGUAGES.includes(document.languageId)) {
+        if (!SUPPORTED_LANGUAGES.includes(document.languageId) || !this.hasValidConfiguration()) {
+            this.collection.delete(document.uri);
             return;
         }
         this.collection.set(document.uri, this.getDiagnostics(document));
     }, DEBOUNCE_DELAY);
 
     public updateAllDiagnostics() {
+        if (!this.hasValidConfiguration()) {
+            this.collection.clear();
+            return;
+        }
+        
         vscode.workspace.textDocuments
             .filter(doc => SUPPORTED_LANGUAGES.includes(doc.languageId))
             .forEach(doc => this.updateDiagnostics(doc));
