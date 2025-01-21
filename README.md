@@ -1,4 +1,7 @@
-# Json I18n Key
+<h1 align="center">
+  <img src="https://raw.githubusercontent.com/hsayed21/json-i18n-key/master/icon.png" width=300' alt="json-i18n-key">
+  <p>Json I18n Key | <a href="https://marketplace.visualstudio.com/items?itemName=hsayed.json-i18n-key">Download</a></p> 
+</h1>
 
 **Json I18n Key** is a Visual Studio Code extension designed to streamline internationalization (i18n) workflows in JSON files. It provides efficient key-path translations, hover tooltips, auto-completion, renaming keys, and AI-powered translation suggestions using GitHub Copilot. The extension helps developers easily manage translation keys across multiple language files.
 
