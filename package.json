@@ -295,7 +295,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "jsonpath-plus": "^10.2.0"
+    "jsonpath-plus": "^10.3.0"
   },
   "release-it": {
     "git": {
