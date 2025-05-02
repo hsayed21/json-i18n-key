@@ -4,7 +4,7 @@
   "description": "A Visual Studio Code extension to help you manage translation keys in JSON files.",
   "author": "Hamada Sayed",
   "publisher": "hsayed",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "engines": {
     "vscode": "^1.93.0"
   },
@@ -272,6 +272,7 @@
     "release": "npm run clean:vsix && release-it --ci --config .config\\\\.release-it.js\\ && vsce package && release-it --ci --no-npm --no-increment --github.release --github.update --github.assets='*${version}.vsix' --github.releaseNotes=\"npx auto-changelog --commit-limit false --template \\\".config\\\\template.hbs\\\" --handlebars-setup \\\".config\\\\setup.js\\\" --stdout\" --no-github.draft --no-git.tag --no-git.commit --no-git.push",
     "minor": "npm run clean:vsix && release-it --config .config\\\\.release-it.js\\ -i minor && vsce package && release-it --no-npm --no-increment --no-git --github.release --github.update --github.assets='*${version}.vsix' --github.releaseNotes=\"npx auto-changelog --commit-limit false --template \\\".config\\\\template.hbs\\\" --handlebars-setup \\\".config\\\\setup.js\\\" --stdout\" --no-github.draft --no-git.tag --no-git.commit --no-git.push",
     "major": "npm run clean:vsix && release-it --config .config\\\\.release-it.js\\ -i major && vsce package && release-it --no-npm --no-increment --no-git --github.release --github.update --github.assets='*${version}.vsix' --github.releaseNotes=\"npx auto-changelog --commit-limit false --template \\\".config\\\\template.hbs\\\" --handlebars-setup \\\".config\\\\setup.js\\\" --stdout\" --no-github.draft --no-git.tag --no-git.commit --no-git.push",
+    "patch": "npm run clean:vsix && release-it --config .config\\\\.release-it.js\\ -i patch && vsce package && release-it --no-npm --no-increment --no-git --github.release --github.update --github.assets='*${version}.vsix' --github.releaseNotes=\"npx auto-changelog --commit-limit false --template \\\".config\\\\template.hbs\\\" --handlebars-setup \\\".config\\\\setup.js\\\" --stdout\" --no-github.draft --no-git.tag --no-git.commit --no-git.push",
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -288,7 +289,7 @@
     "auto-changelog": "^2.5.0",
     "eslint": "^9.9.1",
     "husky": "^8.0.0",
-    "release-it": "^17.10.0",
+    "release-it": "^17.11.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.94.0",
