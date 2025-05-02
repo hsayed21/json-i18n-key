@@ -2,8 +2,14 @@ import * as vscode from 'vscode';
 import { loadJsonFileSync } from '../utils/fileUtils';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { flattenKeysWithValues } from '../utils/jsonUtils';
+import { validateTranslationConfig } from '../utils/configValidation';
 
 export async function searchKeyCommand() {
+
+    if (!await validateTranslationConfig()) {
+		return;
+	}
+
     const jsonData = flattenKeysWithValues(loadJsonFileSync(JsonI18nKeySettings.instance.enJsonFilePath));
     const quickPick = vscode.window.createQuickPick();
     quickPick.matchOnDescription = true;

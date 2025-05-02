@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
 import { findKeyPosition } from '../utils/jsonUtils';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
-import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { KEY_PATH_REGEX } from '../utils/constants';
-import { printChannelOutput } from '../extension';
+import { validateTranslationConfig } from '../utils/configValidation';
 
 async function findKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -11,7 +10,9 @@ async function findKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
-	await autoDetectI18nFiles()
+	if (!await validateTranslationConfig()) {
+		return;
+	}
 
 	const document = editor.document;
 	let keyPath = undefined;

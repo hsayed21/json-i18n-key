@@ -4,14 +4,20 @@ import { glob } from "glob";
 import { JsonI18nKeySettings } from "../models/JsonI18nKeySettings";
 import { loadJsonFileSync, writeJsonFileSync } from "../utils/fileUtils";
 import { GetAlli18nFilesKeys, removeKeyInObject } from "../utils/jsonUtils";
+import { validateTranslationConfig } from "../utils/configValidation";
 
 export async function cleanupUnusedKeys() {
 	try {
+
 		const scanPatterns = JsonI18nKeySettings.instance.scanFilePatterns;
 		const excludePatterns = JsonI18nKeySettings.instance.excludePatterns;
 
 		if (!vscode.workspace.workspaceFolders) {
 			throw new Error("No workspace folder open");
+		}
+
+		if (!await validateTranslationConfig()) {
+			return;
 		}
 
 		const workspaceRoot = vscode.workspace.workspaceFolders[0].uri.fsPath;

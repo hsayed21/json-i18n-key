@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import { JsonParser } from '../utils/json-parser';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
 import { convertCase } from '../utils/globalUtils';
-import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { updateEditorKey } from '../utils/editorUtils';
 import { KEY_PATH_REGEX } from '../utils/constants';
 import { findAndReplaceInFiles } from '../utils/fileUtils';
+import { validateTranslationConfig } from '../utils/configValidation';
 
 export async function renameKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -13,7 +13,9 @@ export async function renameKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
-	await autoDetectI18nFiles()
+	if (!await validateTranslationConfig()) {
+		return;
+	}
 
 	let keyPath = undefined;
 	let newKey = undefined;

@@ -144,7 +144,7 @@ function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
 							keyCache = new Set(GetAlli18nFilesKeys());
 							diagnosticManager.updateKeys(keyCache);
 					} catch (error) {
-							printChannelOutput(`Error reloading keys: ${error}`, true);
+							printChannelOutput(`Error reloading keys: ${error}`);
 					}
 			});
 
@@ -153,7 +153,7 @@ function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
 						keyCache = new Set(GetAlli18nFilesKeys());
 						diagnosticManager.updateKeys(keyCache);
 					} catch (error) {
-							printChannelOutput(`Error loading keys: ${error}`, true);
+							printChannelOutput(`Error loading keys: ${error}`);
 					}
 			});
 
@@ -165,7 +165,7 @@ function setupFileWatcher(): vscode.FileSystemWatcher | undefined {
 
 			return watcher;
 	} catch (error) {
-			printChannelOutput(`Error setting up file watcher: ${error}`, true);
+			printChannelOutput(`Error setting up file watcher: ${error}`);
 			return undefined;
 	}
 }

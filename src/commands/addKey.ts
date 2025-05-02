@@ -4,11 +4,11 @@ import { JsonParser } from "../utils/json-parser";
 import { getTranslationFromCopilot } from "../utils/translationUtils";
 import { JsonI18nKeySettings } from "../models/JsonI18nKeySettings";
 import { convertCase } from "../utils/globalUtils";
-import { autoDetectI18nFiles } from "../options/auto-detect-i18n-files";
 import { flattenKeysWithValues, getKeyValuesFromAllFiles, loadKeys } from "../utils/jsonUtils";
 import { updateEditorKey } from "../utils/editorUtils";
 import { KEY_PATH_REGEX } from "../utils/constants";
 import { loadJsonFileSync } from "../utils/fileUtils";
+import { validateTranslationConfig } from "../utils/configValidation";
 
 
 async function addKeyCommand(): Promise<void> {
@@ -17,7 +17,9 @@ async function addKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
-	await autoDetectI18nFiles();
+	if (!await validateTranslationConfig()) {
+		return;
+	}
 
 	let keyPath: string | undefined = undefined;
 	let originalKeyPath: string | undefined = undefined;

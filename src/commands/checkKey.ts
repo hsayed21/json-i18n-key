@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { checkExistKey } from '../utils/jsonUtils';
 import { JsonI18nKeySettings } from '../models/JsonI18nKeySettings';
-import { autoDetectI18nFiles } from '../options/auto-detect-i18n-files';
 import { KEY_PATH_REGEX } from '../utils/constants';
+import { validateTranslationConfig } from '../utils/configValidation';
 
 async function checkExistKeyCommand(): Promise<void> {
 	const editor = vscode.window.activeTextEditor;
@@ -10,7 +10,9 @@ async function checkExistKeyCommand(): Promise<void> {
 		return; // No open text editor
 	}
 
-	await autoDetectI18nFiles()
+	if (!await validateTranslationConfig()) {
+		return;
+	}
 
 	let keyPath = undefined;
 	const settings = JsonI18nKeySettings.instance;
