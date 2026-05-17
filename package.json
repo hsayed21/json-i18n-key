@@ -278,7 +278,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "@release-it/conventional-changelog": "^9.0.3",
+    "@release-it/conventional-changelog": "^11.0.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "@types/vscode": "^1.93.0",
@@ -289,7 +289,7 @@
     "auto-changelog": "^2.5.0",
     "eslint": "^9.9.1",
     "husky": "^8.0.0",
-    "release-it": "^17.11.0",
+    "release-it": "^20.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.106.2",
